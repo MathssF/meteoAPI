@@ -1,0 +1,67 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Local {
+  id    String  @id @default(uuid())
+  name  String
+  lat   Float
+  lon   Float
+
+  measurements Measurement[]
+  alerts       Alert[]
+}
+
+model Parameter {
+  id        String  @id @default(uuid())
+  code      String
+  name      String
+  unit      String
+
+  measurements Measurement[]
+  alerts       Alert[]
+}
+
+model Measurement {
+  id            String   @id @default(uuid())
+  localId       String
+  parameterId   String
+  timestamp     DateTime
+  value         Float
+  batchId       String?
+
+  local         Local       @relation(fields: [localId], references: [id])
+  parameter     Parameter   @relation(fields: [parameterId], references: [id])
+  batch         ForecastBatch? @relation(fields: [batchId], references: [id])
+
+  @@index([localId, timestamp])
+  @@index([parameterId, timestamp])
+  @@index([batchId])
+}
+
+model ForecastBatch {
+  id        String   @id @default(uuid())
+  runAt     DateTime @default(now())
+  source    String
+
+  measurements Measurement[]
+}
+
+model Alert {
+  id          String   @id @default(uuid())
+  localId     String
+  parameterId String
+  condition   String   // Ex: ">", "<=", etc.
+  threshold   Float
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  local       Local     @relation(fields: [localId], references: [id])
+  parameter   Parameter @relation(fields: [parameterId], references: [id])
+}
