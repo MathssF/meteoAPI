@@ -3,10 +3,8 @@ import { Local } from '../interfaces/measurements.interface';
 
 export async function findOrCreateLocations(prisma: PrismaService, inputLocs: any[]) {
   const locations: Local[] = [];
-  console.log('Entrou no find or create locations')
 
   for (const l of inputLocs) {
-    console.log("***");
     let added = false
     if (l.id) {
       const found = await prisma.local.findUnique({ where: { id: l.id } });
