@@ -57,4 +57,20 @@ export class DevService {
       include: { measurements: true },
     });
   }
+
+  async check(a: string, i: string, v: boolean) {
+    if (a === 'l') {
+      const updatedLocal = await this.prisma.local.update({
+        where: { id: i },
+        data: { check: v },
+      }).catch(() => null);
+      return updatedLocal;
+    } else if(a === "p") {
+      const updatedParameter = await this.prisma.parameter.update({
+        where: { id: i },
+        data: { check: v },
+      }).catch(() => null);
+      return updatedParameter;
+    } else return null;
+  }
 }

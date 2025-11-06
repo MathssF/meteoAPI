@@ -1,5 +1,6 @@
-import { Controller, Post, Get, Param } from '@nestjs/common';
+import { Controller, Post, Get, Param, Patch, Body } from '@nestjs/common';
 import { DevService } from './dev.service';
+import type { devCheck } from './interfaces/check';
 
 @Controller('dev')
 export class DevController {
@@ -37,5 +38,26 @@ export class DevController {
   @Get('batches/date/:date')
   async findBatchesByDate(@Param('date') date: string) {
     return this.mainService.findBatchesByDate(date);
+  }
+
+
+  @Patch('check')
+  async checkDev(@Body('data') data: devCheck) {
+    const { L, P, V } = data;
+    let locals: string[] = [];
+    let parameters: string[] = [];
+    for(const l of L) {
+      const point = await this.mainService.check('l', l, V);
+      if (point) locals.push(l);
+      continue
+    };
+    for(const p of P) {
+      const meteo = await this.mainService.check('p', p, V);
+      if(meteo) parameters.push(p);
+      continue
+    }
+    return {
+      locals, parameters
+    }
   }
 }

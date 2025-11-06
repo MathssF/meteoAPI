@@ -46,7 +46,7 @@ export class ScheduleService {
       where: { id },
       data: { active: true },
     });
-    this.logger.log(`✅ Schedule ${id} ativado`);
+    this.logger.log(`Schedule ${id} ativado`);
     return schedule;
   }
 
@@ -55,7 +55,7 @@ export class ScheduleService {
       where: { id },
       data: { active: false },
     });
-    this.logger.log(`🛑 Schedule ${id} desativado`);
+    this.logger.log(`Schedule ${id} desativado`);
     return schedule;
   }
 
@@ -75,9 +75,9 @@ export class ScheduleService {
 
     for (const s of schedules) {
       if (this.shouldRun(s.when, currentDay, currentDate)) {
-        this.logger.log(`⏰ Executando Schedule ${s.id} para ${s.local.name} (${s.parameter.code})`);
+        this.logger.log(`Schedule: ${s.id} para ${s.local.name} (${s.parameter.code})`);
 
-        await this.measurementService.getAndPost({
+        await this.measurementService.schedulePost(s.id, {
           parameters: [{ id: s.parameter.id }],
           locations: [{ id: s.local.id }],
         });

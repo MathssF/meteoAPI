@@ -1,0 +1,29 @@
+{
+"parameters": [
+  {
+    "id": "06954069-5b40-4bb3-aa98-25dd17d23ed5"
+  },
+  {
+    "code": "t_min_2m_24h:C"
+  },
+  {
+    "name": "Radiação global"
+  },
+  {
+    "code": "dew_point_2m:C"
+  },
+  {
+    "id": "a7175bb3-841f-4e10-83bd-c955701e21f3"
+  }
+],
+"locations": [
+  {
+    "id": "3e17c459-2350-4707-880a-405cbbfa25e0",
+    "name": "Vitória da Conquista"
+  },
+  {
+    "name": "Florianópolis"
+  }
+],
+"date":"2025-11-05T12:00:00Z"
+}
