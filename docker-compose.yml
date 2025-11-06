@@ -1,23 +1,33 @@
-'version: "3.8"
+version: "3.8"
+
+
 services:
   db:
     image: mysql:8
+    container_name: m_mysql
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: weather_db
+      MYSQL_DATABASE: meteo_db
+      MYSQL_USER: meteo_user
+      MYSQL_PASSWORD: root
     ports:
       - "3306:3306"
     volumes:
-      - dbdata:/var/lib/mysql
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 10s
+      retries: 5
 
   api:
     build: .
     ports:
       - "3000:3000"
     environment:
-      DATABASE_URL: mysql://root:root@db:3306/weather_db
+      DATABASE_URL: mysql://root:root@db:3306/meteo_db
     depends_on:
       - db
 volumes:
-  dbdata:
+  mysql_data:
