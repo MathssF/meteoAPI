@@ -9,23 +9,29 @@ datasource db {
 }
 
 model Local {
-  id    String  @id @default(uuid())
-  name  String
-  lat   Float
-  lon   Float
+  id        String   @id @default(uuid())
+  name      String
+  lat       Float
+  lon       Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   measurements Measurement[]
   alerts       Alert[]
+  schedules    Schedule[]
 }
 
 model Parameter {
-  id        String  @id @default(uuid())
+  id        String   @id @default(uuid())
   code      String
   name      String
   unit      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   measurements Measurement[]
   alerts       Alert[]
+  schedules    Schedule[]
 }
 
 model Measurement {
@@ -35,20 +41,27 @@ model Measurement {
   timestamp     DateTime
   value         Float
   batchId       String?
+  scheduleId    String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
   local         Local       @relation(fields: [localId], references: [id])
   parameter     Parameter   @relation(fields: [parameterId], references: [id])
   batch         ForecastBatch? @relation(fields: [batchId], references: [id])
+  schedule      Schedule?   @relation(fields: [scheduleId], references: [id])
 
   @@index([localId, timestamp])
   @@index([parameterId, timestamp])
   @@index([batchId])
+  @@index([scheduleId])
 }
 
 model ForecastBatch {
-  id        String   @id @default(uuid())
-  runAt     DateTime @default(now())
-  source    String
+  id         String   @id @default(uuid())
+  runAt      DateTime @default(now())
+  source     String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
   measurements Measurement[]
 }
@@ -61,7 +74,26 @@ model Alert {
   threshold   Float
   active      Boolean  @default(true)
   createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   local       Local     @relation(fields: [localId], references: [id])
   parameter   Parameter @relation(fields: [parameterId], references: [id])
+}
+
+model Schedule {
+  id          String   @id @default(uuid())
+  localId     String
+  parameterId String
+  time        String   // ex: "12:00", "06:30"
+  when        String   // ex: "sun,mon,wed" ou "10,20,30"
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  local       Local     @relation(fields: [localId], references: [id])
+  parameter   Parameter @relation(fields: [parameterId], references: [id])
+  measurements Measurement[]
+
+  @@index([localId, time])
+  @@index([parameterId, when])
 }

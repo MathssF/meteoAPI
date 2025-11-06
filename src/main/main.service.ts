@@ -7,6 +7,7 @@ export class MainService {
   constructor(private prisma: PrismaService) {}
   
   async seed() {
-    await mainSeed();
+    await mainSeed(this.prisma);
   }
+
 }

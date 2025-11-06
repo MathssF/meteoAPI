@@ -7,9 +7,10 @@ import { ParameterModule } from './parameter/parameter.module';
 import { MeasurementModule } from './measurement/measurement.module';
 import { AlertModule } from './alert/alert.module';
 import { PrismaModule } from './prisma/prisma.module';
+import { ScheduleModule } from './schedule/schedule.module';
 
 @Module({
-  imports: [MainModule, LocalModule, ParameterModule, MeasurementModule, AlertModule, PrismaModule],
+  imports: [MainModule, LocalModule, ParameterModule, MeasurementModule, AlertModule, PrismaModule, ScheduleModule],
   controllers: [AppController],
   providers: [AppService],
 })
