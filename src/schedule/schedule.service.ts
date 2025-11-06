@@ -1,5 +1,5 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { Cron, CronExpression } from '@nestjs/schedule';
+import { Cron } from '@nestjs/schedule';
 import { PrismaService } from '../prisma/prisma.service';
 import { MeasurementService } from '../measurement/measurement.service';
 import { CreateScheduleDto } from './dto/create-schedule.dto';
@@ -13,7 +13,7 @@ export class ScheduleService {
     private measurementService: MeasurementService,
   ) {}
 
-  // ---------- CRUD BÁSICO ----------
+  // CRUD
 
   async create(data: CreateScheduleDto) {
     return this.prisma.schedule.create({ data });
@@ -59,9 +59,9 @@ export class ScheduleService {
     return schedule;
   }
 
-  // ---------- CRON JOB (a cada minuto) ----------
+  // CRON JOB (a cada 5 minutos)
 
-  @Cron(CronExpression.EVERY_MINUTE)
+  @Cron('*/5 * * * *')
   async handleSchedules() {
     const now = new Date();
     const currentTime = now.toTimeString().slice(0, 5); // "HH:MM"
@@ -77,9 +77,9 @@ export class ScheduleService {
       if (this.shouldRun(s.when, currentDay, currentDate)) {
         this.logger.log(`⏰ Executando Schedule ${s.id} para ${s.local.name} (${s.parameter.code})`);
 
-        await this.measurementService.fetchFromMeteomatics({
-          parameters: [{ code: s.parameter.code }],
-          locations: [{ lat: s.local.lat, lon: s.local.lon, name: s.local.name }],
+        await this.measurementService.getAndPostFromMeteomatics({
+          parameters: [{ id: s.parameter.id }],
+          locations: [{ id: s.local.id }],
         });
       }
     }

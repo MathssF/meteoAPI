@@ -20,13 +20,6 @@ export async function seedLocals() {
     if (!existing) {
       await prisma.local.create({ data: local });
     }
-    /*
-    await prisma.local.upsert({
-      where: { name: local.name },
-      update: {},
-      create: local,
-    });
-    */
   }
 
   console.log('✅ Locais inseridos com sucesso!');

@@ -10,7 +10,7 @@ import { processAndSaveMeasurements } from './utils/measurement.utils';
 export class MeasurementService {
   constructor(private prisma: PrismaService) {}
 
-  async fetchFromMeteomatics(dto: FetchMeasurementsDto) {
+  async getAndPostFromMeteomatics(dto: FetchMeasurementsDto) {
   const username = process.env.METEOMATICS_USER;
   const password = process.env.METEOMATICS_PASS;
   if (!username || !password) throw new Error('❌ Variáveis METEOMATICS_USER ou METEOMATICS_PASS não definidas.');

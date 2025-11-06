@@ -9,7 +9,7 @@ export class MeasurementController {
   @Post('fetch')
   async fetch(@Body() dto: FetchMeasurementsDto) {
     try {
-      return await this.service.fetchFromMeteomatics(dto);
+      return await this.service.getAndPostFromMeteomatics(dto);
     } catch (error) {
       return { status: 'error', message: error.message };
     }
