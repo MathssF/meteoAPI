@@ -19,6 +19,7 @@ export async function processAndSaveMeasurements(
   batchId: string
 ) {
   const savedMeasurements: Measurement[] = [];
+  console.log('Entrou no measurements utils');
 
   for (const p of data) {
     const parameter = parameters.find((param) => param.code === p.parameter.split(':')[0]);
@@ -44,6 +45,7 @@ export async function processAndSaveMeasurements(
     }
   }
 
+  console.log('saindo do measurement utils');
   return savedMeasurements;
 }
 

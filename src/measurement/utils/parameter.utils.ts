@@ -5,6 +5,8 @@ export async function findValidParameters(prisma: PrismaService, inputParams: an
   const parameters: Parameter[] = [];
   const invalidParameters: typeof inputParams = [];
 
+  console.log('Para utils');
+
   for (const p of inputParams) {
     let param = p.id ? await prisma.parameter.findUnique({ where: { id: p.id } }) : null;
     if (!param && p.code) param = await prisma.parameter.findUnique({ where: { code: p.code } });
