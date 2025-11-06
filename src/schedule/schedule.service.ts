@@ -1,7 +1,8 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { PrismaService } from '../prisma/prisma.service';
 import { MeasurementService } from '../measurement/measurement.service';
+import { CreateScheduleDto } from './dto/create-schedule.dto';
 
 @Injectable()
 export class ScheduleService {
@@ -11,6 +12,54 @@ export class ScheduleService {
     private prisma: PrismaService,
     private measurementService: MeasurementService,
   ) {}
+
+  // ---------- CRUD BÁSICO ----------
+
+  async create(data: CreateScheduleDto) {
+    return this.prisma.schedule.create({ data });
+  }
+
+  async findAll() {
+    return this.prisma.schedule.findMany({
+      include: { local: true, parameter: true },
+    });
+  }
+
+  async findById(id: string) {
+    const schedule = await this.prisma.schedule.findUnique({
+      where: { id },
+      include: { local: true, parameter: true },
+    });
+    if (!schedule) throw new NotFoundException(`Schedule ${id} não encontrado`);
+    return schedule;
+  }
+
+  async findByLocalId(localId: string) {
+    return this.prisma.schedule.findMany({
+      where: { localId },
+      include: { local: true, parameter: true },
+    });
+  }
+
+  async activateById(id: string) {
+    const schedule = await this.prisma.schedule.update({
+      where: { id },
+      data: { active: true },
+    });
+    this.logger.log(`✅ Schedule ${id} ativado`);
+    return schedule;
+  }
+
+  async deactivateById(id: string) {
+    const schedule = await this.prisma.schedule.update({
+      where: { id },
+      data: { active: false },
+    });
+    this.logger.log(`🛑 Schedule ${id} desativado`);
+    return schedule;
+  }
+
+  // ---------- CRON JOB (a cada minuto) ----------
 
   @Cron(CronExpression.EVERY_MINUTE)
   async handleSchedules() {
@@ -32,15 +81,12 @@ export class ScheduleService {
           parameters: [s.parameter.code],
           locations: [{ lat: s.local.lat, lon: s.local.lon, name: s.local.name }],
         });
-
       }
     }
   }
 
   private shouldRun(when: string, currentDay: string, currentDate: string): boolean {
     const items = when.split(',').map(w => w.trim().toLowerCase());
-    // Exemplo: "sun,mon,wed" → roda se o dia atual está na lista
-    // Ou "10,20,30" → roda se a data atual está na lista
     return items.includes(currentDay) || items.includes(currentDate);
   }
 }
