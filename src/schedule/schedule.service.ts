@@ -77,7 +77,7 @@ export class ScheduleService {
       if (this.shouldRun(s.when, currentDay, currentDate)) {
         this.logger.log(`⏰ Executando Schedule ${s.id} para ${s.local.name} (${s.parameter.code})`);
 
-        await this.measurementService.getAndPostFromMeteomatics({
+        await this.measurementService.getAndPost({
           parameters: [{ id: s.parameter.id }],
           locations: [{ id: s.local.id }],
         });

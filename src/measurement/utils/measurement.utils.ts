@@ -44,3 +44,37 @@ export async function processAndSaveMeasurements(
 
   return savedMeasurements;
 }
+
+export async function scheduleMeasurement(
+  prisma: PrismaService,
+  data: MeteomaticsData[],
+  parameters: Parameter[],
+  locations: Local[],
+  scheduleId: string
+) {
+  const savedMeasurements: Measurement[] = [];
+
+  for (const p of data) {
+    const parameter = parameters.find((param) => param.code === p.parameter.split(':')[0]);
+    if (!parameter) continue;
+
+    for (const c of p.coordinates) {
+      const local = locations.find((l) => l.lat === c.lat && l.lon === c.lon);
+      if (!local) continue;
+
+      for (const d of c.dates) {
+        const measurement = await prisma.measurement.create({
+          data: {
+            localId: local.id,
+            parameterId: parameter.id,
+            timestamp: new Date(d.date),
+            value: d.value,
+          },
+        });
+        savedMeasurements.push(measurement);
+      }
+    }
+  }
+
+  return savedMeasurements;
+}
