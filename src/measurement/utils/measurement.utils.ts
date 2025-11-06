@@ -29,6 +29,7 @@ export async function processAndSaveMeasurements(
       if (!local) continue;
 
       for (const d of c.dates) {
+        console.log('measuremente uniade: ', d)
         const measurement = await prisma.measurement.create({
           data: {
             localId: local.id,
@@ -44,28 +45,6 @@ export async function processAndSaveMeasurements(
   }
 
   return savedMeasurements;
-}
-
-export async function randomMeasurements(
-  prisma: PrismaService,
-  data: MeteomaticsData[],
-  parameter: string,
-  local: string,
-  date: string
-) {
-  const localCheck = await prisma.local.findFirst({ where: { id: local }})
-  const paraCheck = await prisma.parameter.findFirst({ where: { id: parameter }})
-  if (!localCheck || !paraCheck) return null;
-  const result = await prisma.measurement.create({
-    data: {
-      localId: localCheck.id,
-      parameterId: paraCheck.id,
-      timestamp: new Date(date),
-      value: 1,
-    }
-  })  
-
-  return result;
 }
 
 export async function scheduleMeasurement(
@@ -92,6 +71,7 @@ export async function scheduleMeasurement(
             parameterId: parameter.id,
             timestamp: new Date(d.date),
             value: d.value,
+            scheduleId
           },
         });
         savedMeasurements.push(measurement);

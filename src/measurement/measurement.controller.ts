@@ -14,6 +14,7 @@ export class MeasurementController {
   @Post()
   async fetch(@Body() dto: FetchMeasurementsDto) {
     try {
+      console.log('Entrou no Controller')
       return await this.postService.getAndPost(dto);
     } catch (error) {
       return { status: 'error', message: error.message };
