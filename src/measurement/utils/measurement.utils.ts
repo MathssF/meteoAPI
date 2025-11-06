@@ -22,13 +22,19 @@ export async function processAndSaveMeasurements(
   console.log('Entrou no measurements utils');
 
   for (const p of data) {
+    console.log('1 *')
     const parameter = parameters.find((param) => param.code === p.parameter.split(':')[0]);
     if (!parameter) continue;
 
+    console.log('Parameter: ', parameter)
+
     for (const c of p.coordinates) {
+      console.log('2 **')
       const local = locations.find((l) => l.lat === c.lat && l.lon === c.lon);
       if (!local) continue;
 
+      console.log('local: ', local);
+      
       for (const d of c.dates) {
         console.log('measuremente uniade: ', d)
         const measurement = await prisma.measurement.create({
@@ -45,7 +51,7 @@ export async function processAndSaveMeasurements(
     }
   }
 
-  console.log('saindo do measurement utils');
+  console.log('saindo do measurement utils, ', savedMeasurements);
   return savedMeasurements;
 }
 
