@@ -11,11 +11,56 @@ export class MeasurementService {
     const username = process.env.METEOMATICS_USER;
     const password = process.env.METEOMATICS_PASS;
 
+    if (!username || !password) {
+      throw new Error('❌ Variáveis de ambiente METEOMATICS_USER ou METEOMATICS_PASS não definidas!');
+    }
+
     const date = dto.date ?? new Date().toISOString().split('.')[0] + 'Z';
 
-    const params = dto.parameters.join(',');
-    const coords = dto.locations.map(l => `${l.lat},${l.lon}`).join('+');
-    const url = `https://api.meteomatics.com/${date}/${params}/${coords}/json`;
+    const parameters = await Promise.all(
+      dto.parameters.map(async (p) => {
+        if (p.id) {
+          return await this.prisma.parameter.findUnique({ where: { id: p.id } });
+        } else {
+          return await this.prisma.parameter.upsert({
+            where: { code: p.code },
+            update: {},
+            create: {
+              code: p.code,
+              name: p.name ?? p.code,
+              unit: p.unit ?? '',
+            },
+          });
+        }
+      })
+    );
+
+    const locations = await Promise.all(
+      dto.locations.map(async (l) => {
+        if (l.id) {
+          return await this.prisma.local.findUnique({ where: { id: l.id } });
+        } else {
+          return await this.prisma.local.upsert({
+            where: {
+              // evita duplicar o mesmo ponto geográfico
+              name_lat_lon: { name: l.name ?? '', lat: l.lat ?? 0, lon: l.lon ?? 0 },
+            },
+            update: {},
+            create: {
+              name: l.name ?? 'Local sem nome',
+              lat: l.lat ?? 0,
+              lon: l.lon ?? 0,
+            },
+          });
+        }
+      })
+    );
+
+
+    const paramCodes = parameters.map(p => p.code).join(',');
+    const coordString = locations.map(l => `${l.lat},${l.lon}`).join('+');
+
+    const url = `https://api.meteomatics.com/${date}/${paramCodes}/${coordString}/json`;
 
     const response = await axios.get(url, {
       auth: { username, password }
