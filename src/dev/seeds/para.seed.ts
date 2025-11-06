@@ -20,11 +20,17 @@ export async function seedParameters() {
   ];
 
   for (const p of parameters) {
+    let existing = await prisma.parameter.findFirst({ where: { code: p.code}});
+    if (!existing) {
+      await prisma.parameter.create({ data: p })
+    }
+    /*
     await prisma.parameter.upsert({
       where: { code: p.code },
       update: {},
       create: p,
     });
+    */
   }
 
   console.log('✅ Parâmetros inseridos com sucesso!');

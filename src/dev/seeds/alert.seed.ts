@@ -12,6 +12,13 @@ export async function seedAlerts() {
   const tempParam = await prisma.parameter.findFirst({ where: { code: 't_2m:C' } });
   const precipParam = await prisma.parameter.findFirst({ where: { code: 'precip_1h:mm' } });
 
+  if(
+    !conquista || !floripa || !tempParam || !precipParam ||
+    !conquista.id || !floripa.id || !tempParam.id || !precipParam.id
+  ) {
+    return null;
+  }
+
   const alerts = [
     // Vitória da Conquista
     {

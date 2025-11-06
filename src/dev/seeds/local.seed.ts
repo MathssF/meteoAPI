@@ -16,11 +16,17 @@ export async function seedLocals() {
   ];
 
   for (const local of locals) {
+    let existing = await prisma.local.findFirst({ where: { name: local.name } });
+    if (!existing) {
+      await prisma.local.create({ data: local });
+    }
+    /*
     await prisma.local.upsert({
       where: { name: local.name },
       update: {},
       create: local,
     });
+    */
   }
 
   console.log('✅ Locais inseridos com sucesso!');
