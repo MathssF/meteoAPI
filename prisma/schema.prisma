@@ -20,6 +20,7 @@ model Local {
   measurements Measurement[]
   alerts       Alert[]
   schedules    Schedule[]
+  triggeredAlerts TriggeredAlert[]
 }
 
 model Parameter {
@@ -34,6 +35,7 @@ model Parameter {
   measurements Measurement[]
   alerts       Alert[]
   schedules    Schedule[]
+  triggeredAlerts TriggeredAlert[]
 }
 
 model Measurement {
@@ -81,20 +83,21 @@ model Alert {
 
   local       Local     @relation(fields: [localId], references: [id])
   parameter   Parameter @relation(fields: [parameterId], references: [id])
+  triggeredAlerts TriggeredAlert[]
 }
 
 model Schedule {
-  id          String   @id @default(uuid())
-  localId     String
-  parameterId String
-  time        String   // ex: "12:00", "06:30"
-  when        String   // ex: "sun,mon,wed" ou "10,20,30"
-  active      Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id           String   @id @default(uuid())
+  localId      String
+  parameterId  String
+  time         String   // ex: "12:00", "06:30"
+  when         String   // ex: "sun,mon,wed" ou "10,20,30"
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
-  local       Local     @relation(fields: [localId], references: [id])
-  parameter   Parameter @relation(fields: [parameterId], references: [id])
+  local        Local     @relation(fields: [localId], references: [id])
+  parameter    Parameter @relation(fields: [parameterId], references: [id])
   measurements Measurement[]
 
   @@index([localId, time])
@@ -102,12 +105,16 @@ model Schedule {
 }
 
 model TriggeredAlert {
-  id          String   @id @default(uuid())
-  alertId     String
-  localId     String
-  parameterId String
-  value       Float
-  alertDate   DateTime // data do alerta
-  alertTime   String   // horário do alerta, formato "HH:MM"
-  createdAt   DateTime @default(now())
+  id           String   @id @default(uuid())
+  alertId      String
+  localId      String
+  parameterId  String
+  value        Float
+  alertDate    DateTime
+  alertTime    String  // "HH:MM"
+  createdAt    DateTime @default(now())
+
+  alert       Alert     @relation(fields: [alertId], references: [id])
+  local       Local     @relation(fields: [localId], references: [id])
+  parameter   Parameter @relation(fields: [parameterId], references: [id])
 }
