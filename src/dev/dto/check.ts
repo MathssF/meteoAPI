@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { IsArray, IsBoolean, IsString, ArrayNotEmpty } from 'class-validator';
 
 export class DevCheckDto {
