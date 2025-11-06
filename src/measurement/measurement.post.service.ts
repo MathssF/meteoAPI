@@ -1,11 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { FetchMeasurementsDto } from './dto/fetch-measurements.dto';
-import { findValidParameters, randomParameter } from './utils/parameter.utils';
+import { findValidParameters } from './utils/parameter.utils';
 import { fetchMeteomaticsData } from './utils/meteomatics.utils';
-import { findOrCreateLocations, randomLocal } from './utils/local.utils';
+import { findOrCreateLocations,  } from './utils/local.utils';
 import { processAndSaveMeasurements, scheduleMeasurement, randomMeasurements } from './utils/measurement.utils';
-import { Param } from 'generated/prisma/runtime/library';
 
 @Injectable()
 export class MeasurementPostService {
@@ -40,27 +39,6 @@ export class MeasurementPostService {
       savedCount: savedMeasurements.length,
       response: savedMeasurements,
       invalidParameters,
-    };
-  }
-
-  async random() {
-  const username = process.env.METEOMATICS_USER;
-  const password = process.env.METEOMATICS_PASS;
-
-  if (!username || !password) throw new Error('Prtecisa das credenciais');
-
-  const date = new Date().toISOString().split('.')[0] + 'Z';
-
-  const param = await randomParameter();
-  const local = await randomLocal();
-
-  const meteomaticsData = await fetchMeteomaticsData(username, password, date, param.id, local.id);
-
-  const savedMeasurements = await randomMeasurements(this.prisma, meteomaticsData.data, param.id, local.id, date);
-
-    return {
-      status: 'ok',
-      response: savedMeasurements
     };
   }
 

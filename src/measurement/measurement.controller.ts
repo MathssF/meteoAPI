@@ -20,12 +20,6 @@ export class MeasurementController {
     }
   }
 
-  // POST /random
-  @Post('random')
-  async random() {
-    return await this.postService.random();
-  }
-
   // GET /measurement
   @Get()
   findAll() {
