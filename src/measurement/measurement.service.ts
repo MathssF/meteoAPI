@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { FetchMeasurementsDto } from './dto/fetch-measurements.dto';
-import { Measurement } from './interfaces/measurements.interface'
 import { findValidParameters } from './utils/parameter.utils';
 import { fetchMeteomaticsData } from './utils/meteomatics.utils';
 import { findOrCreateLocations } from './utils/local.utils';
+import { processAndSaveMeasurements } from './utils/measurement.utils';
 
 @Injectable()
 export class MeasurementService {
@@ -29,37 +29,7 @@ export class MeasurementService {
 
   const batch = await this.prisma.forecastBatch.create({ data: { source: 'meteomatics' } });
 
-    // 🔹 Processar medições
-    const savedMeasurements: Measurement[] = [];
-
-    for (const p of meteomaticsData.data) {
-      const parameter = await this.prisma.parameter.findFirst({
-        where: { code: p.parameter.split(':')[0] },
-      });
-
-      if (!parameter) continue;
-
-      for (const c of p.coordinates) {
-        const local = await this.prisma.local.findFirst({
-          where: { lat: c.lat, lon: c.lon },
-        });
-
-        if (!local) continue;
-
-        for (const d of c.dates) {
-          const measurement = await this.prisma.measurement.create({
-            data: {
-              localId: local.id,
-              parameterId: parameter.id,
-              timestamp: new Date(d.date),
-              value: d.value,
-              batchId: batch.id,
-            },
-          });
-          savedMeasurements.push(measurement);
-        }
-      }
-    }
+    const savedMeasurements = await processAndSaveMeasurements(this.prisma, meteomaticsData.data, parameters, locations, batch.id);
 
     return {
       status: 'ok',
