@@ -5,17 +5,8 @@ export class CreateTriggeredAlertDto {
   alertId: string;
 
   @IsString()
-  localId: string;
-
-  @IsString()
-  parameterId: string;
+  measurementId: string;
 
   @IsNumber()
   value: number;
-
-  @IsDate()
-  alertDate: Date;
-
-  @IsString()
-  alertTime: string; // formato "HH:MM"
 }

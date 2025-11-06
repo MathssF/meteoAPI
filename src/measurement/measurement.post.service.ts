@@ -13,19 +13,26 @@ export class MeasurementPostService {
   async getAndPost(dto: FetchMeasurementsDto) {
   const username = process.env.METEOMATICS_USER;
   const password = process.env.METEOMATICS_PASS;
-  if (!username || !password) throw new Error('❌ Variáveis METEOMATICS_USER ou METEOMATICS_PASS não definidas.');
+  console.log('User e senha: ', username, password);
+
+  if (!username || !password) throw new Error('Prtecisa das credenciais');
 
   const date = dto.date ?? new Date().toISOString().split('.')[0] + 'Z';
+  console.log('Date: ', date)
 
   const { parameters, invalidParameters } = await findValidParameters(this.prisma, dto.parameters);
+  console.log('Parametros: ', parameters, invalidParameters);
   if (parameters.length === 0) return { status: 'error', message: 'Nenhum parâmetro válido encontrado.', invalidParameters };
 
   const locations = await findOrCreateLocations(this.prisma, dto.locations);
+  console.log('locations: ', locations)
 
   const paramCodes = parameters.map(p => p.code).join(',');
   const coordString = locations.map(l => `${l.lat},${l.lon}`).join('+');
+  console.log('Param e coordenadas: ', paramCodes.slice(0, 5), coordString.slice(0, 5));
 
   const meteomaticsData = await fetchMeteomaticsData(username, password, date, paramCodes, coordString);
+  console.log('Meteomatics: ', meteomaticsData.slice(0, 5))
 
   const batch = await this.prisma.forecastBatch.create({ data: { source: 'meteomatics' } });
 
@@ -43,7 +50,7 @@ export class MeasurementPostService {
   async schedulePost(scheduleId: string, dto: FetchMeasurementsDto) {
   const username = process.env.METEOMATICS_USER;
   const password = process.env.METEOMATICS_PASS;
-  if (!username || !password) throw new Error('❌ Variáveis METEOMATICS_USER ou METEOMATICS_PASS não definidas.');
+  if (!username || !password) throw new Error('Precisa das credenciais');
 
   const date = dto.date ?? new Date().toISOString().split('.')[0] + 'Z';
 

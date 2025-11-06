@@ -13,12 +13,4 @@ export class TriggeredAlertService {
   findById(id: string) {
     return this.prisma.triggeredAlert.findUnique({ where: { id } });
   }
-
-  findByAlertId(alertId: string) {
-    return this.prisma.triggeredAlert.findMany({ where: { alertId } });
-  }
-
-  findByLocalId(localId: string) {
-    return this.prisma.triggeredAlert.findMany({ where: { localId } });
-  }
 }

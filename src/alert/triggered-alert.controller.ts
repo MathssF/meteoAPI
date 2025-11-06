@@ -15,14 +15,4 @@ export class TriggeredAlertController {
   findById(@Param('id') id: string) {
     return this.service.findById(id);
   }
-
-  @Get('by-alert/:alertId')
-  findByAlertId(@Param('alertId') alertId: string) {
-    return this.service.findByAlertId(alertId);
-  }
-
-  @Get('by-local/:localId')
-  findByLocalId(@Param('localId') localId: string) {
-    return this.service.findByLocalId(localId);
-  }
 }
