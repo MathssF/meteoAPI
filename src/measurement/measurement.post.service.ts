@@ -7,7 +7,7 @@ import { findOrCreateLocations } from './utils/local.utils';
 import { processAndSaveMeasurements } from './utils/measurement.utils';
 
 @Injectable()
-export class MeasurementService {
+export class MeasurementPostService {
   constructor(private prisma: PrismaService) {}
 
   async getAndPostFromMeteomatics(dto: FetchMeasurementsDto) {
@@ -29,42 +29,14 @@ export class MeasurementService {
 
   const batch = await this.prisma.forecastBatch.create({ data: { source: 'meteomatics' } });
 
-    const savedMeasurements = await processAndSaveMeasurements(this.prisma, meteomaticsData.data, parameters, locations, batch.id);
+  const savedMeasurements = await processAndSaveMeasurements(this.prisma, meteomaticsData.data, parameters, locations, batch.id);
 
     return {
       status: 'ok',
       batchId: batch.id,
       savedCount: savedMeasurements.length,
+      response: savedMeasurements,
       invalidParameters,
     };
-  }
-
-  // Fetchs:
-
-  async findAll() {
-    return this.prisma.measurement.findMany({
-      include: { local: true, parameter: true, batch: true, schedule: true },
-    });
-  }
-
-  async findById(id: string) {
-    return this.prisma.measurement.findUnique({
-      where: { id },
-      include: { local: true, parameter: true, batch: true, schedule: true },
-    });
-  }
-
-  async findByBatch(batchId: string) {
-    return this.prisma.measurement.findMany({
-      where: { batchId },
-      include: { local: true, parameter: true },
-    });
-  }
-
-  async findBySchedule(scheduleId: string) {
-    return this.prisma.measurement.findMany({
-      where: { scheduleId },
-      include: { local: true, parameter: true },
-    });
   }
 }

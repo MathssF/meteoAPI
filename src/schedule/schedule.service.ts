@@ -1,7 +1,7 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
 import { PrismaService } from '../prisma/prisma.service';
-import { MeasurementService } from '../measurement/measurement.service';
+import { MeasurementPostService } from '../measurement/measurement.post.service';
 import { CreateScheduleDto } from './dto/create-schedule.dto';
 
 @Injectable()
@@ -10,7 +10,7 @@ export class ScheduleService {
 
   constructor(
     private prisma: PrismaService,
-    private measurementService: MeasurementService,
+    private measurementService: MeasurementPostService,
   ) {}
 
   // CRUD
