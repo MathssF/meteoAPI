@@ -1,106 +1,38 @@
 import { Injectable } from '@nestjs/common';
-import axios from 'axios';
 import { PrismaService } from '../prisma/prisma.service';
 import { FetchMeasurementsDto } from './dto/fetch-measurements.dto';
-import { Parameter, Local, Measurement } from './interfaces/measurements.interface'
+import { Measurement } from './interfaces/measurements.interface'
+import { findValidParameters } from './utils/parameter.utils';
+import { fetchMeteomaticsData } from './utils/meteomatics.utils';
+import { findOrCreateLocations } from './utils/local.utils';
 
 @Injectable()
 export class MeasurementService {
   constructor(private prisma: PrismaService) {}
 
   async fetchFromMeteomatics(dto: FetchMeasurementsDto) {
-    const username = process.env.METEOMATICS_USER;
-    const password = process.env.METEOMATICS_PASS;
+  const username = process.env.METEOMATICS_USER;
+  const password = process.env.METEOMATICS_PASS;
+  if (!username || !password) throw new Error('❌ Variáveis METEOMATICS_USER ou METEOMATICS_PASS não definidas.');
 
-    if (!username || !password) {
-      throw new Error('❌ Variáveis METEOMATICS_USER ou METEOMATICS_PASS não definidas.');
-    }
+  const date = dto.date ?? new Date().toISOString().split('.')[0] + 'Z';
 
-    const date = dto.date ?? new Date().toISOString().split('.')[0] + 'Z';
+  const { parameters, invalidParameters } = await findValidParameters(this.prisma, dto.parameters);
+  if (parameters.length === 0) return { status: 'error', message: 'Nenhum parâmetro válido encontrado.', invalidParameters };
 
-    // 🔹 Buscar PARÂMETROS
-    const parameters: Parameter[] = [];
-    const invalidParameters: typeof dto.parameters = [];
+  const locations = await findOrCreateLocations(this.prisma, dto.locations);
 
-    for (const p of dto.parameters) {
-      let param: Parameter | null = null;
+  const paramCodes = parameters.map(p => p.code).join(',');
+  const coordString = locations.map(l => `${l.lat},${l.lon}`).join('+');
 
-      // 1️⃣ Tenta pelo ID
-      if (p.id) {
-        param = await this.prisma.parameter.findUnique({ where: { id: p.id } });
-      }
+  const meteomaticsData = await fetchMeteomaticsData(username, password, date, paramCodes, coordString);
 
-      // 2️⃣ Tenta pelo code (somente se ainda não encontrou)
-      if (!param && p.code) {
-        param = await this.prisma.parameter.findUnique({ where: { code: p.code } });
-      }
-
-      // 3️⃣ Tenta pelo name (somente se ainda não encontrou)
-      if (!param && p.name) {
-        param = await this.prisma.parameter.findFirst({ where: { name: p.name } });
-      }
-
-      // 4️⃣ Se não encontrou por nenhum critério, marca como inválido
-      if (!param) {
-        invalidParameters.push(p);
-      } else {
-        parameters.push(param);
-      }
-    }
-
-    if (parameters.length === 0) {
-      return {
-        status: 'error',
-        message: 'Nenhum parâmetro válido encontrado.',
-        invalidParameters,
-      };
-    }
-
-    // 🔹 Buscar LOCAIS
-    const locations: Local[] = [];
-    for (const l of dto.locations) {
-      if (l.id) {
-        const found = await this.prisma.local.findUnique({ where: { id: l.id } });
-        if (found) locations.push(found);
-        continue;
-      }
-
-      if (l.lat == null || l.lon == null) {
-        throw new Error('❌ Para criar um local, é necessário informar lat e lon.');
-      }
-
-      let existing = await this.prisma.local.findFirst({
-        where: { lat: l.lat, lon: l.lon },
-      });
-
-      if (!existing) {
-        existing = await this.prisma.local.create({
-          data: {
-            name: l.name ?? 'Local sem nome',
-            lat: l.lat,
-            lon: l.lon,
-          },
-        });
-      }
-
-      locations.push(existing);
-    }
-
-    const paramCodes = parameters.map((p) => p.code).join(',');
-    const coordString = locations.map((l) => `${l.lat},${l.lon}`).join('+');
-    const url = `https://api.meteomatics.com/${date}/${paramCodes}/${coordString}/json`;
-
-    const response = await axios.get(url, { auth: { username, password } });
-
-    // 🔹 Criar Batch
-    const batch = await this.prisma.forecastBatch.create({
-      data: { source: 'meteomatics' },
-    });
+  const batch = await this.prisma.forecastBatch.create({ data: { source: 'meteomatics' } });
 
     // 🔹 Processar medições
     const savedMeasurements: Measurement[] = [];
 
-    for (const p of response.data.data) {
+    for (const p of meteomaticsData.data) {
       const parameter = await this.prisma.parameter.findFirst({
         where: { code: p.parameter.split(':')[0] },
       });
