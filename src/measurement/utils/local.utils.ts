@@ -7,25 +7,37 @@ export async function findOrCreateLocations(prisma: PrismaService, inputLocs: an
 
   for (const l of inputLocs) {
     console.log("***");
+    let added = false
     if (l.id) {
       const found = await prisma.local.findUnique({ where: { id: l.id } });
       if (found) { locations.push(found); continue; }
     }
 
-    if (l.lat == null || l.lon == null) {
-      throw new Error('Precisa informar dados corretos.');
+    if (l.name) {
+      const foundByName = await prisma.local.findUnique({ where: { name: l.name } });
+      if (foundByName) {
+        locations.push(foundByName);
+        continue;
+      }
     }
 
-    let existing = await prisma.local.findFirst({ where: { lat: l.lat, lon: l.lon } });
-    if (!existing) {
+    if (l.lat != null && l.lon != null) {
+      const foundByCoords = await prisma.local.findFirst({ where: { lat: l.lat, lon: l.lon } });
+      if (foundByCoords) {
+        locations.push(foundByCoords);
+        continue;
+      }
+
       if (l.name) {
-        existing = await prisma.local.create({
+        const newLocal = await prisma.local.create({
           data: { name: l.name, lat: l.lat, lon: l.lon },
         });
+        locations.push(newLocal);
+        continue;
       }
-    } else {
-      locations.push(existing);
     }
+
+    console.log(`Local ignorado: ${JSON.stringify(l)}`);
   }
 
   return locations;
