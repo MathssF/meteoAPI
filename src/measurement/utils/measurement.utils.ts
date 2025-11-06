@@ -1,3 +1,4 @@
+import { ParameterModule } from 'src/parameter/parameter.module';
 import { PrismaService } from '../../prisma/prisma.service';
 import { Measurement, Local, Parameter } from '../interfaces/measurements.interface';
 
@@ -43,6 +44,28 @@ export async function processAndSaveMeasurements(
   }
 
   return savedMeasurements;
+}
+
+export async function randomMeasurements(
+  prisma: PrismaService,
+  data: MeteomaticsData[],
+  parameter: string,
+  local: string,
+  date: string
+) {
+  const localCheck = await prisma.local.findFirst({ where: { id: local }})
+  const paraCheck = await prisma.parameter.findFirst({ where: { id: parameter }})
+  if (!localCheck || !paraCheck) return null;
+  const result = await prisma.measurement.create({
+    data: {
+      localId: localCheck.id,
+      parameterId: paraCheck.id,
+      timestamp: new Date(date),
+      value: 1,
+    }
+  })  
+
+  return result;
 }
 
 export async function scheduleMeasurement(

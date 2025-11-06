@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { FetchMeasurementsDto } from './dto/fetch-measurements.dto';
-import { findValidParameters } from './utils/parameter.utils';
+import { findValidParameters, randomParameter } from './utils/parameter.utils';
 import { fetchMeteomaticsData } from './utils/meteomatics.utils';
-import { findOrCreateLocations } from './utils/local.utils';
-import { processAndSaveMeasurements, scheduleMeasurement } from './utils/measurement.utils';
+import { findOrCreateLocations, randomLocal } from './utils/local.utils';
+import { processAndSaveMeasurements, scheduleMeasurement, randomMeasurements } from './utils/measurement.utils';
+import { Param } from 'generated/prisma/runtime/library';
 
 @Injectable()
 export class MeasurementPostService {
@@ -17,7 +18,6 @@ export class MeasurementPostService {
   if (!username || !password) throw new Error('Prtecisa das credenciais');
 
   const date = dto.date ?? new Date().toISOString().split('.')[0] + 'Z';
-  console.log('Date: ', date)
 
   const { parameters, invalidParameters } = await findValidParameters(this.prisma, dto.parameters);
   if (parameters.length === 0) return { status: 'error', message: 'Nenhum parâmetro válido encontrado.', invalidParameters };
@@ -40,6 +40,27 @@ export class MeasurementPostService {
       savedCount: savedMeasurements.length,
       response: savedMeasurements,
       invalidParameters,
+    };
+  }
+
+  async random() {
+  const username = process.env.METEOMATICS_USER;
+  const password = process.env.METEOMATICS_PASS;
+
+  if (!username || !password) throw new Error('Prtecisa das credenciais');
+
+  const date = new Date().toISOString().split('.')[0] + 'Z';
+
+  const param = await randomParameter();
+  const local = await randomLocal();
+
+  const meteomaticsData = await fetchMeteomaticsData(username, password, date, param.id, local.id);
+
+  const savedMeasurements = await randomMeasurements(this.prisma, meteomaticsData.data, param.id, local.id, date);
+
+    return {
+      status: 'ok',
+      response: savedMeasurements
     };
   }
 

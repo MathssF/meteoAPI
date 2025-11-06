@@ -40,3 +40,17 @@ export async function findOrCreateLocations(prisma: PrismaService, inputLocs: an
 
   return locations;
 }
+
+export async function randomLocal() {
+    const count = await this.prisma.local.count();
+    if (count === 0) return null;
+
+    const randomIndex = Math.floor(Math.random() * count);
+
+    const randomLocal = await this.prisma.local.findMany({
+      take: 1,
+      skip: randomIndex,
+    });
+
+    return randomLocal[0] ?? null;
+  }

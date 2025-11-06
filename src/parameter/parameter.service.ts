@@ -47,4 +47,18 @@ export class ParameterService {
       },
     });
   }
+
+  async findRandom() {
+    const count = await this.prisma.parameter.count();
+    if (count === 0) return null;
+
+    const randomIndex = Math.floor(Math.random() * count);
+
+    const randomParameter = await this.prisma.parameter.findMany({
+      take: 1,
+      skip: randomIndex,
+    });
+
+    return randomParameter[0] ?? null;
+  }
 }
