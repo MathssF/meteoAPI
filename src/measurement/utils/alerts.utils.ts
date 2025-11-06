@@ -60,3 +60,23 @@ export async function checkAlerts(
 
   return results;
 }
+
+export async function processMeasurementAlerts(
+  prisma: PrismaService,
+  measurements: { localId: string; parameterId: string; value: number }[]
+): Promise<CheckAlertResult[]> {
+  const results: CheckAlertResult[] = [];
+
+  for (const m of measurements) {
+    const alertResults = await checkAlerts(prisma, m.localId, m.parameterId, m.value);
+    results.push(...alertResults.filter(r => r.triggered));
+  }
+
+  return results;
+}
+
+export async function handleTriggeredAlerts(triggeredAlerts: CheckAlertResult[]) {
+  for (const a of triggeredAlerts) {
+    // Lógica ainda a ser implementada
+  }
+}
