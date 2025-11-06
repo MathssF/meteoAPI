@@ -23,7 +23,6 @@ export class ParameterService {
       where: {
         name: {
           contains: name,
-          mode: 'insensitive',
         },
       },
     });
@@ -34,7 +33,6 @@ export class ParameterService {
       where: {
         code: {
           contains: code,
-          mode: 'insensitive',
         },
       },
     });
@@ -45,7 +43,6 @@ export class ParameterService {
       where: {
         unit: {
           equals: unit,
-          mode: 'insensitive',
         },
       },
     });

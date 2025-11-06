@@ -25,14 +25,22 @@ export class MeasurementService {
     for (const p of dto.parameters) {
       let param: Parameter | null = null;
 
+      // 1️⃣ Tenta pelo ID
       if (p.id) {
         param = await this.prisma.parameter.findUnique({ where: { id: p.id } });
-      } else if (p.code) {
+      }
+
+      // 2️⃣ Tenta pelo code (somente se ainda não encontrou)
+      if (!param && p.code) {
         param = await this.prisma.parameter.findUnique({ where: { code: p.code } });
-      } else if (p.name) {
+      }
+
+      // 3️⃣ Tenta pelo name (somente se ainda não encontrou)
+      if (!param && p.name) {
         param = await this.prisma.parameter.findFirst({ where: { name: p.name } });
       }
 
+      // 4️⃣ Se não encontrou por nenhum critério, marca como inválido
       if (!param) {
         invalidParameters.push(p);
       } else {

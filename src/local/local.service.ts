@@ -29,13 +29,9 @@ export class LocalService {
   async findByName(name: string) {
     return this.prisma.local.findMany({
       where: {
-        name: { equals: name, mode: 'insensitive' }
-        /*
         name: {
           contains: name,
-          mode: 'insensitive',
         },
-        */
       },
     });
   }
