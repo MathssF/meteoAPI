@@ -13,9 +13,12 @@ import { ScheduleService } from './schedule/schedule.service';
 
 @Module({
   imports: [
-    DevModule, LocalModule, ParameterModule,
-    MeasurementModule, AlertModule, PrismaModule,
-    ScheduleModule, NestScheduleModule.forRoot(),
+    LocalModule, ParameterModule,
+    MeasurementModule, AlertModule, 
+    ScheduleModule,
+    NestScheduleModule.forRoot(),
+    PrismaModule,
+    DevModule,
   ],
   controllers: [AppController],
   providers: [AppService, ScheduleService],

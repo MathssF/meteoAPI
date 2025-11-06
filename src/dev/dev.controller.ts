@@ -1,6 +1,6 @@
-import { Controller, Post, Get, Param, Patch, Body } from '@nestjs/common';
+import { Controller, Post, Get, Param, Patch, Body, Put } from '@nestjs/common';
 import { DevService } from './dev.service';
-import type { devCheck } from './interfaces/check';
+import type { DevCheckDto } from './dto/check';
 
 @Controller('dev')
 export class DevController {
@@ -41,8 +41,8 @@ export class DevController {
   }
 
 
-  @Patch('check')
-  async checkDev(@Body('data') data: devCheck) {
+  @Put('check')
+  async checkDev(@Body() data: DevCheckDto) {
     const { L, P, V } = data;
     let locals: string[] = [];
     let parameters: string[] = [];
