@@ -13,7 +13,7 @@ model Local {
   name      String   @unique
   lat       Float
   lon       Float
-  // check     Boolean  @default(false)
+  check?    Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -27,7 +27,7 @@ model Parameter {
   code      String   @unique
   name      String   @unique
   unit      String
-  // check     Boolean  @default(false)
+  check?    Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -74,6 +74,7 @@ model Alert {
   parameterId String
   condition   String   // Ex: ">", "<=", etc.
   threshold   Float
+  message     String?
   active      Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -98,4 +99,15 @@ model Schedule {
 
   @@index([localId, time])
   @@index([parameterId, when])
+}
+
+model TriggeredAlert {
+  id          String   @id @default(uuid())
+  alertId     String
+  localId     String
+  parameterId String
+  value       Float
+  alertDate   DateTime // data do alerta
+  alertTime   String   // horário do alerta, formato "HH:MM"
+  createdAt   DateTime @default(now())
 }
