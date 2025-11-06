@@ -13,4 +13,22 @@ export class AlertService {
     findAll() {
       return this.prisma.alert.findMany();
     }
+
+    findByLocalId(localId: string) {
+    return this.prisma.alert.findMany({
+      where: { localId },
+    });
+  }
+
+  findByParameterId(parameterId: string) {
+    return this.prisma.alert.findMany({
+      where: { parameterId },
+    });
+  }
+
+  findByLocalAndParameter(localId: string, parameterId: string) {
+    return this.prisma.alert.findMany({
+      where: { localId, parameterId },
+    });
+  }
 }

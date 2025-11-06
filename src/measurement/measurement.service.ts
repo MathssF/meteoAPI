@@ -39,7 +39,7 @@ export class MeasurementService {
     };
   }
 
-  // -------- Fetchs --------
+  // Fetchs:
 
   async findAll() {
     return this.prisma.measurement.findMany({
