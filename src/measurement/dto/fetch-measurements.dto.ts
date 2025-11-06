@@ -4,7 +4,7 @@ import { Type } from 'class-transformer';
 class LocationInput {
   @IsOptional()
   @IsString()
-  id?: string; // caso já exista no banco
+  id?: string;
 
   @IsOptional()
   @IsString()
@@ -22,7 +22,7 @@ class LocationInput {
 class ParameterInput {
   @IsOptional()
   @IsString()
-  id?: string; // caso já exista no banco
+  id?: string;
 
   @IsOptional()
   @IsString()
