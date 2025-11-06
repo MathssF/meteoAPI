@@ -78,7 +78,7 @@ export class ScheduleService {
         this.logger.log(`⏰ Executando Schedule ${s.id} para ${s.local.name} (${s.parameter.code})`);
 
         await this.measurementService.fetchFromMeteomatics({
-          parameters: [s.parameter.code],
+          parameters: [{ code: s.parameter.code }],
           locations: [{ lat: s.local.lat, lon: s.local.lon, name: s.local.name }],
         });
       }

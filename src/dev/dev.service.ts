@@ -3,7 +3,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { mainSeed } from './seeds/main.seed';
 
 @Injectable()
-export class MainService {
+export class DevService {
   constructor(private prisma: PrismaService) {}
 
   // ---- SEEDS ----
