@@ -13,4 +13,27 @@ export class LocalService {
   findAll() {
     return this.prisma.local.findMany();
   }
+
+  async findById(id: string) {
+    return this.prisma.local.findUnique({ where: { id } });
+  }
+
+  async findByLat(lat: number) {
+    return this.prisma.local.findMany({ where: { lat } });
+  }
+
+  async findByLon(lon: number) {
+    return this.prisma.local.findMany({ where: { lon } });
+  }
+
+  async findByName(name: string) {
+    return this.prisma.local.findMany({
+      where: {
+        name: {
+          contains: name, // busca parcial (LIKE '%texto%')
+          mode: 'insensitive', // ignora maiúsculas/minúsculas
+        },
+      },
+    });
+  }
 }
