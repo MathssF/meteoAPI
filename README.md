@@ -72,4 +72,29 @@ Obs: Certifique-se de estar usando Node.js >= 20 e npm >= 10, conforme definido 
 
 3. **Configure as variáveis de ambiente**
 
-No arquivo, .env.example, apague o ".example" ou crie uma versão só com ".env", depois preencha os dados:
+No arquivo, .env.example, apague o ".example" ou crie uma versão só com ".env", depois preencha os dados com os seus dados.
+
+OBS: Para a parte do METEOMATICS, vai precisar criar seu user aqui: https://www.meteomatics.com/en/weather-api/
+Eles irão te passar login e senha por email.
+
+4. **Gere o Prisma**
+
+```bash
+npx prisma generate
+```
+
+5. **Rodar a aplicação**
+
+```bash
+npm run start:dev
+```
+
+6. **Seeds (Opcional)**
+
+Se quiser ir nas seeds, vai no AppModule, e import o DevModule", e coloque entre os módulos.
+Depois disto, vai abrir em baixo do seu Swagger uma rota "/dev/seeds", pode usar ela.
+Recomendo que depois remova o DevModule do AppModule.
+
+7. **Acessando**
+
+Depois de tudo isto, basta rodar na rota "/". O Swagger já esta configurado na rota principal.
