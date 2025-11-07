@@ -1,1 +1,1 @@
-import { mockLocals, mockParameters } from './measurement.spec';
+import { mockLocals, mockParameters } from './measurement.mocks';
