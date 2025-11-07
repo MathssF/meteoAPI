@@ -6,6 +6,7 @@ interface CheckAlertResult {
   parameterId: string;
   value: number;
   triggered: boolean;
+  message?: string | null;
 }
 
 export async function checkAlerts(
@@ -14,14 +15,24 @@ export async function checkAlerts(
   parameterId: string,
   value: number
 ): Promise<CheckAlertResult[]> {
+  // Busca alertas ativos para o local e parâmetro
   const alerts = await prisma.alert.findMany({
     where: {
       localId,
       parameterId,
       active: true,
     },
+    select: {
+      id: true,
+      localId: true,
+      parameterId: true,
+      condition: true,
+      threshold: true,
+      message: true,
+    },
   });
 
+  // Verifica condições e adiciona a mensagem ao retorno
   const results: CheckAlertResult[] = alerts.map(alert => {
     let triggered = false;
 
@@ -55,48 +66,9 @@ export async function checkAlerts(
       parameterId: alert.parameterId,
       value,
       triggered,
+      message: alert.message ?? null,
     };
   });
-
-  return results;
-}
-
-export async function processMeasurementAlerts(
-  prisma: PrismaService,
-  measurements: { localId: string; parameterId: string; value: number }[]
-): Promise<CheckAlertResult[]> {
-  const results: CheckAlertResult[] = [];
-
-  for (const m of measurements) {
-    const alertResults = await checkAlerts(prisma, m.localId, m.parameterId, m.value);
-    results.push(...alertResults.filter(r => r.triggered));
-  }
-
-  return results;
-}
-
-export async function handleTriggeredAlerts(
-  prisma: PrismaService,
-  triggeredAlerts: CheckAlertResult[]
-) {
-  const results = [];
-
-  for (const a of triggeredAlerts) {
-    const alert = await prisma.alert.findUnique({
-      where: { id: a.alertId },
-      select: { id: true, message: true },
-    });
-
-    const triggered = await prisma.triggeredAlert.create({
-      data: {
-        alertId: a.alertId,
-        value: a.value,
-        message: alert?.message ?? `Alerta disparado para parâmetro ${a.parameterId}`,
-      },
-    });
-
-    results.push(triggered);
-  }
 
   return results;
 }
