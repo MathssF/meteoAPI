@@ -47,3 +47,6 @@ Além disto, passo a passo para Testar os Alertas:
 3- Crie um alerta, usando este parameterId, localId, e com um valor próximo do Value (mas não igual), se for menor, use a condição '>', se for maior, use a confição'<'
 4- Por fim, pegue novamente estes valores de localId, parameterId e usando a mesma data utilizada, jogue na primeira rota de medição.
 5- Irá dar um resultado que vai incluir uma resposta de "trigger alert"
+
+## Localmente:
+
