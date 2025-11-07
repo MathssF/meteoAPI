@@ -58,29 +58,48 @@ export class MeasurementController {
   }
 
   /**
-   * Gera uma medição única aleatória a partir de um local e um parâmetro.
-   * Usa a API Meteomatics para obter o valor atual e cria o registro no banco.
+   * Gera uma ou várias medições aleatórias a partir de um local e um parâmetro.
+   * Pode receber uma data personalizada ou uma quantidade desejada de medições.
    */
   @Post('random')
   @ApiOperation({
-    summary: 'Gerar uma medição aleatória via Meteomatics',
+    summary: 'Gerar medições aleatórias via Meteomatics',
     description:
-      'Obtém uma medição em tempo real a partir de um `localId` e `parameterId` fornecidos. Cria a medição no banco e dispara alertas caso existam.',
+      'Obtém uma ou mais medições em tempo real (ou para uma data específica) a partir de um `localId` e `parameterId`. Cria as medições no banco e dispara alertas caso existam.',
   })
-  @ApiQuery({
-    name: 'localId',
-    required: true,
-    description: 'ID do local de onde a medição será feita',
-  })
-  @ApiQuery({
-    name: 'parameterId',
-    required: true,
-    description: 'ID do parâmetro a ser medido',
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        date: {
+          type: 'string',
+          format: 'date-time',
+          description: 'Data personalizada para a medição (opcional)',
+          example: '2025-11-06T12:00:00Z',
+        },
+        count: {
+          type: 'number',
+          description: 'Quantidade de medições aleatórias a gerar (opcional)',
+          example: 5,
+        },
+      },
+    },
   })
   async random(
-    @Query('localId') localId: string,
-    @Query('parameterId') parameterId: string,
+    @Body() body?: { date?: string; count?: number },
   ) {
-    return this.randomService.execute(localId, parameterId);
+    const count = body?.count && body.count > 0 ? body.count : 1;
+
+    const results = [];
+    for (let i = 0; i < count; i++) {
+      const result = await this.randomService.execute(body?.date);
+      results.push(result);
+    }
+
+    return {
+      status: 'ok',
+      total: results.length,
+      results,
+    };
   }
 }
