@@ -54,5 +54,22 @@ Além disto, passo a passo para Testar os Alertas:
 
 ## Instalação
 
-Para instalar Localmente, 
+Para instalar e rodar a aplicação localmente, siga os passos abaixo:
 
+1. **Clone o repositório**
+```bash
+git clone <URL_DO_REPOSITORIO>
+cd meteo-api
+```
+
+2. **Instale as dependências**
+
+```bash
+npm install
+```
+
+Obs: Certifique-se de estar usando Node.js >= 20 e npm >= 10, conforme definido no package.json.
+
+3. **Configure as variáveis de ambiente**
+
+No arquivo, .env.example, apague o ".example" ou crie uma versão só com ".env", depois preencha os dados:
