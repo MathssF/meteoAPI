@@ -13,6 +13,7 @@ import { AlertController } from 'src/controllers/alert.controller';
 import { PrismaService } from 'src/core/data/prisma/prisma.service';
 import { Local, Parameter, Measurement } from '../interfaces/measurements.interface';
 import { FetchMeasurementsDto, LocationInput, ParameterInput } from '../dto/fetch-measurements.dto';
+import { post } from 'axios';
 
 describe('', () => {
   let controller: MeasurementController;
@@ -150,7 +151,7 @@ describe('', () => {
       {id: "e330384c-1b3b-44f3-9a78-76898e91981b"},
       {id: "invalidID"},
     ];
-    const testLical2: LocationInput[] = [
+    const testLocal2: LocationInput[] = [
       {name: 'Salvador'},
       {lat: -14.8615, lon: -40.8445}
     ];
@@ -160,7 +161,15 @@ describe('', () => {
       {code: "precip_1h:mm"}
     ];
     const timeNow = new Date();
-    const dto1: FetchMeasurementsDto = {parameters: testParameter, locations: testLocal1 }
+    const dto1: FetchMeasurementsDto = {parameters: testParameter, locations: testLocal1 };
+    const dto2: FetchMeasurementsDto = {parameters: [testParameter[0], testParameter[2]], locations: testLocal2 }
     const result1 = await postService.executeFetch(dto1, timeNow.toString());
+    const result2 = await postService.executeFetch(dto2, timeNow.toString())
+
+    expect(result1);
+    expect(result2);
+    expect(result1.invalidParameters.length).toBe(1);
+    expect(result2.invalidParameters.length).toBe(0);
+    expect(result1.status).toBe('ok');
   })
 })
