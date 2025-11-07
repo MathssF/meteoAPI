@@ -11,6 +11,7 @@ export class DevService {
     await mainSeed(this.prisma);
   }
 
+  /*
   // ---- SCHEDULES ----
   async activateAllSchedules() {
     const result = await this.prisma.schedule.updateMany({
@@ -73,4 +74,5 @@ export class DevService {
       return updatedParameter;
     } else return null;
   }
+  */
 }
