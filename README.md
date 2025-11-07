@@ -3,7 +3,7 @@
 Este Projeto visa pegar as API do Meteomatics (https://www.meteomatics.com/en/weather-api/), e criar uma persistência própria, para poder ser posteriormente usada como Api.
 
 
-## Estrutura
+## 1- Estrutura
 
 ### Banco
 
@@ -52,7 +52,13 @@ Além disto, passo a passo para Testar os Alertas:
 4- Por fim, pegue novamente estes valores de localId, parameterId e usando a mesma data utilizada, jogue na primeira rota de medição.
 5- Irá dar um resultado que vai incluir uma resposta de "trigger alert"
 
-## Instalação
+## 2- Tecnologias e Escolhas
+
+Neste projeto, optei por usar NestJS, Docker, MySQL, e TypeScript como as principais ferramentas. Outras ferramentas envolveram Jest, UUIDv7, entre outros.
+
+Eu escolhi fazer mais de uma tabela, para criar relações entre elas, e interações.
+
+## 3- Instalação
 
 Para instalar e rodar a aplicação localmente, siga os passos abaixo:
 
