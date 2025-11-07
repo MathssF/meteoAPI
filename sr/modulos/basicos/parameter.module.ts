@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { ParameterService } from '../../sr/services/parameter.service';
-import { ParameterController } from '../../sr/controllers/parameter.controller';
+import { ParameterService } from '../../services/parameter.service';
+import { ParameterController } from '../../controllers/parameter.controller';
 
 @Module({
   controllers: [ParameterController],

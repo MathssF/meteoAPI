@@ -1,6 +1,6 @@
-import { ParameterModule } from 'src/parameter/parameter.module';
-import { PrismaService } from '../../services/prisma.service';
-import { Measurement, Local, Parameter } from '../interfaces/measurements.interface';
+import { ParameterModule } from 'sr/modulos/basicos/parameter.module';
+import { PrismaService } from '../../../services/prisma.service';
+import { Measurement, Local, Parameter } from '../../interfaces/measurements.interface';
 import { Console } from 'console';
 
 interface MeteomaticsData {

@@ -1,15 +1,15 @@
 import { Module } from '@nestjs/common';
-import { AppController } from '../../src/app.controller';
-import { AppService } from '../../src/app.service';
+import { AppController } from '../controllers/app.controller';
+import { AppService } from '../services/app.service';
 import { DevModule } from '../tools/dev/dev.module';
 import { LocalModule } from './basicos/local.module';
-import { ParameterModule } from '../../src/parameter/parameter.module';
+import { ParameterModule } from './basicos/parameter.module';
 import { MeasurementModule } from './ponta/measurement.module';
 import { AlertModule } from './basicos/alert.module';
 import { PrismaModule } from './prisma.module';
-import { ScheduleModule } from '../../src/schedule/schedule.module';
+import { ScheduleModule } from './ponta/schedule.module';
 import { ScheduleModule as NestScheduleModule } from '@nestjs/schedule';
-import { ScheduleService } from '../../src/schedule/schedule.service';
+import { ScheduleService } from '../services/schedule.service';
 
 @Module({
   imports: [

@@ -1,5 +1,5 @@
-import { PrismaService } from '../../services/prisma.service';
-import { Local } from '../interfaces/measurements.interface';
+import { PrismaService } from '../../../services/prisma.service';
+import { Local } from '../../interfaces/measurements.interface';
 
 export async function findOrCreateLocations(prisma: PrismaService, inputLocs: any[]) {
   const locations: Local[] = [];

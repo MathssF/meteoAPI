@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from './prisma.service';
 import { FetchMeasurementsDto } from '../tools/dto/fetch-measurements.dto';
-import { findValidParameters } from '../tools/measurement-utils/parameter.utils';
-import { fetchMeteomaticsData } from '../tools/measurement-utils/meteomatics.utils';
-import { findOrCreateLocations,  } from '../tools/measurement-utils/local.utils';
-import { processAndSaveMeasurements, scheduleMeasurement } from '../tools/measurement-utils/measurement.utils';
-import { checkAlerts } from '../tools/measurement-utils/alerts.utils';
+import { findValidParameters } from '../tools/utils/measurement-utils/parameter.utils';
+import { fetchMeteomaticsData } from '../tools/utils/measurement-utils/meteomatics.utils';
+import { findOrCreateLocations,  } from '../tools/utils/measurement-utils/local.utils';
+import { processAndSaveMeasurements, scheduleMeasurement } from '../tools/utils/measurement-utils/measurement.utils';
+import { checkAlerts } from '../tools/utils/measurement-utils/alerts.utils';
 
 @Injectable()
 export class MeasurementPostService {

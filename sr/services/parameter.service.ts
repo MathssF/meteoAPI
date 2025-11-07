@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from './prisma.service';
-import { CreateParameterDto } from '../../src/parameter/dto/create-parameter.dto';
+import { CreateParameterDto } from '../tools/dto/create-parameter.dto';
 
 @Injectable()
 export class ParameterService {
