@@ -3,7 +3,6 @@ import { AlertController } from '../../controllers/alert.controller';
 import { AlertService } from '../../services/alert.service';
 import { PrismaService } from '../../core/data/prisma/prisma.service';
 
-// Mock do Prisma
 const prismaMock = {
   alert: {
     create: jest.fn(),
@@ -35,8 +34,6 @@ describe('AlertController & AlertService', () => {
 
     jest.clearAllMocks();
   });
-
-  // ========== SERVICE TESTS ==========
 
   describe('AlertService', () => {
     it('deve criar um alerta', async () => {
@@ -80,8 +77,6 @@ describe('AlertController & AlertService', () => {
       expect(result[0].id).toBe('t1');
     });
   });
-
-  // ========== CONTROLLER TESTS ==========
 
   describe('AlertController', () => {
     it('POST /alert deve chamar service.createAlert', async () => {
