@@ -1,7 +1,5 @@
-import { BasicModule } from 'src/modulos/basic.module';
 import { PrismaService } from '../../../core/data/prisma/prisma.service';
 import { Measurement, Local, Parameter } from '../../interfaces/measurements.interface';
-import { Console } from 'console';
 
 interface MeteomaticsData {
   parameter: string;
