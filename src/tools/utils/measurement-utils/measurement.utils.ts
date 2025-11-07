@@ -1,4 +1,4 @@
-import { ParameterModule } from 'sr/modulos/basicos/parameter.module';
+import { ParameterModule } from 'src/modulos/basicos/parameter.module';
 import { PrismaService } from '../../../services/prisma.service';
 import { Measurement, Local, Parameter } from '../../interfaces/measurements.interface';
 import { Console } from 'console';
