@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { mockLocals, mockParameters } from './measurement.mocks';
-import { mockAlerts } from './alert.mocks';
+import { mockAlerts, mockParameterValues } from './alert.mocks';
 import { mockSchedules } from './schedule.mocks';
 import { MeasurementFetchService } from 'src/services/measurement.fetchs.service';
 import { MeasurementPostService } from 'src/services/measurement.post.service';
@@ -15,6 +15,13 @@ import { PrismaService } from 'src/core/data/prisma/prisma.service';
 describe('', () => {
   let controller: MeasurementController;
   let randomService: MeasurementRandomService;
+  let postService: MeasurementPostService;
+  let fetchService: MeasurementFetchService;
+
+  let scheduleC: ScheduleController;
+  let scheduleS: ScheduleService;
+  let alertC: AlertController;
+  let alertS: AlertService;
 
 
    const prismaMock = {
