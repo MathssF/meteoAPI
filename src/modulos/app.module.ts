@@ -1,6 +1,4 @@
 import { Module } from '@nestjs/common';
-import { AppController } from '../controllers/app.controller';
-import { AppService } from '../services/app.service';
 import { DevModule } from '../tools/dev/dev.module';
 import { MeasurementModule } from './ponta/measurement.module';
 import { PrismaModule } from '../core/data/prisma/prisma.module';
@@ -18,7 +16,7 @@ import { BasicModule } from './basic.module';
     PrismaModule,
     DevModule,
   ],
-  controllers: [AppController],
-  providers: [AppService, ScheduleService],
+  controllers: [],
+  providers: [ScheduleService],
 })
 export class AppModule {}
