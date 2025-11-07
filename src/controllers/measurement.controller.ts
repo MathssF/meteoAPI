@@ -1,5 +1,5 @@
 import { Controller, Post, Body, Get, Query } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiQuery } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiQuery, ApiBody } from '@nestjs/swagger';
 import { MeasurementPostService } from '../services/measurement.post.service';
 import { MeasurementFetchService } from '../services/measurement.fetchs.service';
 import { MeasurementRandomService } from 'src/services/measurement.random.service';
@@ -58,14 +58,13 @@ export class MeasurementController {
   }
 
   /**
-   * Gera uma ou várias medições aleatórias a partir de um local e um parâmetro.
-   * Pode receber uma data personalizada ou uma quantidade desejada de medições.
+   * Gera medições aleatórias com base em locais e parâmetros do banco.
    */
   @Post('random')
   @ApiOperation({
     summary: 'Gerar medições aleatórias via Meteomatics',
     description:
-      'Obtém uma ou mais medições em tempo real (ou para uma data específica) a partir de um `localId` e `parameterId`. Cria as medições no banco e dispara alertas caso existam.',
+      'Gera medições em tempo real (ou para uma data específica) com combinações aleatórias de locais e parâmetros já existentes no banco. Limita a 3 de cada tipo.',
   })
   @ApiBody({
     schema: {
@@ -74,27 +73,28 @@ export class MeasurementController {
         date: {
           type: 'string',
           format: 'date-time',
-          description: 'Data personalizada para a medição (opcional)',
-          example: '2025-11-06T12:00:00Z',
+          description: 'Data personalizada (opcional)',
         },
-        count: {
+        localCount: {
           type: 'number',
-          description: 'Quantidade de medições aleatórias a gerar (opcional)',
-          example: 5,
+          description: 'Número de locais aleatórios (máximo 3)',
+          example: 2,
+        },
+        parameterCount: {
+          type: 'number',
+          description: 'Número de parâmetros aleatórios (máximo 3)',
+          example: 2,
         },
       },
     },
   })
   async random(
-    @Body() body?: { date?: string; count?: number },
+    @Body() body?: { date?: string; localCount?: number; parameterCount?: number },
   ) {
-    const count = body?.count && body.count > 0 ? body.count : 1;
+    const localCount = body?.localCount && body.localCount > 0 ? body.localCount : 1;
+    const parameterCount = body?.parameterCount && body.parameterCount > 0 ? body.parameterCount : 1;
 
-    const results = [];
-    for (let i = 0; i < count; i++) {
-      const result = await this.randomService.execute(body?.date);
-      results.push(result);
-    }
+    const results = await this.randomService.executeRandomBatch(localCount, parameterCount, body?.date);
 
     return {
       status: 'ok',
