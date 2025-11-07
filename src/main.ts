@@ -6,7 +6,10 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   const config = new DocumentBuilder()
-    .setTitle('MeteoAPI').build();
+    .setTitle('MeteoAPI')
+    .setDescription('Uma API que confere a meteomatics, salva os dados na persistência, e apresenta outras funcionalidades!')
+    .setContact('Matheus Flores', 'https://www.linkedin.com/in/matheus-oaf/', 'maths.aki@gmail.com')
+    .build();
 
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('', app, document);
