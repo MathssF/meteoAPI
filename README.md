@@ -34,3 +34,16 @@ Semelhante as tabelas temos:
 **Schedule**: Adicionar uma agenda ou ver as agendas.
 
 **Alertas**: Adicionar um alerta ou ver os alertas.
+
+#### Testes:
+
+Nas rota principal de Measurement, você pode testar, usando o conteúdo do arquivo:
+/workspaces/meteoAPI/src/tools/dev/resources/measurement.test.json
+
+Além disto, passo a passo para Testar os Alertas:
+
+1- Faça uma medição aleatória.
+2- Copie o localId, paramterId, value
+3- Crie um alerta, usando este parameterId, localId, e com um valor próximo do Value (mas não igual), se for menor, use a condição '>', se for maior, use a confição'<'
+4- Por fim, pegue novamente estes valores de localId, parameterId e usando a mesma data utilizada, jogue na primeira rota de medição.
+5- Irá dar um resultado que vai incluir uma resposta de "trigger alert"
