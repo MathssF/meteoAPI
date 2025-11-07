@@ -1,5 +1,6 @@
 export const mockAlerts = [
   {
+    // 🌡️ Temperatura acima de 30°C — Salvador
     id: 'a1b2c3d4-e5f6-7890-abcd-111122223333',
     name: 'Temperatura acima de 30°C',
     localId: '3729e756-4536-4570-87ec-b90c331af3ef', // Salvador
@@ -12,6 +13,7 @@ export const mockAlerts = [
     updatedAt: '2025-11-06T22:50:00.000Z',
   },
   {
+    // ❄️ Temperatura abaixo de 10°C — Florianópolis
     id: 'b2c3d4e5-f6a7-890b-cdef-222233334444',
     name: 'Temperatura abaixo de 10°C',
     localId: 'e330384c-1b3b-44f3-9a78-76898e91981b', // Florianópolis
@@ -24,6 +26,7 @@ export const mockAlerts = [
     updatedAt: '2025-11-06T22:51:00.000Z',
   },
   {
+    // 💧 Umidade acima de 90% — Vitória da Conquista
     id: 'c3d4e5f6-a7b8-90cd-ef01-333344445555',
     name: 'Umidade acima de 90%',
     localId: '3e17c459-2350-4707-880a-405cbbfa25e0', // Vitória da Conquista
@@ -36,6 +39,7 @@ export const mockAlerts = [
     updatedAt: '2025-11-06T22:52:00.000Z',
   },
   {
+    // 🌧️ Precipitação acima de 10mm/h — Blumenau
     id: 'd4e5f6a7-b8c9-01de-f234-444455556666',
     name: 'Precipitação acima de 10mm/h',
     localId: 'eeaf3c14-c529-44a1-9d73-fbc80444809d', // Blumenau
@@ -48,6 +52,7 @@ export const mockAlerts = [
     updatedAt: '2025-11-06T22:53:00.000Z',
   },
   {
+    // ☀️ Radiação solar acima de 800 W/m² — São José
     id: 'e5f6a7b8-c9d0-12ef-3456-555566667777',
     name: 'Radiação solar acima de 800 W/m²',
     localId: '499d28ff-89d9-4202-ad51-1986844d81d0', // São José
@@ -58,5 +63,32 @@ export const mockAlerts = [
     active: true,
     createdAt: '2025-11-06T22:54:00.000Z',
     updatedAt: '2025-11-06T22:54:00.000Z',
+  },
+];
+
+export const mockParameterValues = [
+  {
+    parameterId: 'a7175bb3-841f-4e10-83bd-c955701e21f3', // Temperatura do ar a 2m
+    code: 't_2m:C',
+    possibleValues: [5, 12, 18, 28, 33],
+    description: 'Valores típicos de temperatura do ar (°C)',
+  },
+  {
+    parameterId: 'b32587ed-527e-404b-bd0d-14bbbc81af04', // Umidade relativa do ar a 2m
+    code: 'rel_hum_2m:p',
+    possibleValues: [45, 60, 75, 88, 95],
+    description: 'Valores típicos de umidade relativa (%)',
+  },
+  {
+    parameterId: '8d0940f8-5069-4376-8834-bf8de04a9d4a', // Precipitação 1h
+    code: 'precip_1h:mm',
+    possibleValues: [0, 2, 5, 11, 25],
+    description: 'Valores típicos de precipitação por hora (mm/h)',
+  },
+  {
+    parameterId: '1fb8105c-c9a0-49ef-8fb9-48782a9d785a', // Radiação global
+    code: 'global_rad:W',
+    possibleValues: [100, 400, 700, 850, 1000],
+    description: 'Valores típicos de radiação solar global (W/m²)',
   },
 ];
