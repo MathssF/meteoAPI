@@ -17,3 +17,5 @@ const prismaMock = {
     findMany: jest.fn(),
   },
 };
+
+describe(() => {})
