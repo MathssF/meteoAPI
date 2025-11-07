@@ -35,8 +35,6 @@ export class MeasurementPostService {
     const paramCodes = parameters.map((p) => p.code).join(',');
     const coordString = locations.map((l) => `${l.lat},${l.lon}`).join('+');
 
-    console.log('Locations e parameters code: ', locations, paramCodes, coordString);
-
     const meteomaticsData = await fetchMeteomaticsData(
       username,
       password,
@@ -44,7 +42,6 @@ export class MeasurementPostService {
       paramCodes,
       coordString,
     );
-    console.log('Meteomatics: ', meteomaticsData);
 
     let batchId: string | null = null;
     if (!scheduleId) {
@@ -61,7 +58,6 @@ export class MeasurementPostService {
       locations,
       { batchId, scheduleId },
     );
-    console.log('Saved: ', savedMeasurements);
 
     let matchAlerts: any[] = [];
     if (!scheduleId) {
@@ -76,8 +72,6 @@ export class MeasurementPostService {
         if (check) matchAlerts.push(check);
       }
     }
-
-    console.log('Alerts: ', matchAlerts);
 
     return {
       status: 'ok',
