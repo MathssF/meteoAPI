@@ -1,6 +1,7 @@
 import { ParameterModule } from 'src/parameter/parameter.module';
 import { PrismaService } from '../../prisma/prisma.service';
 import { Measurement, Local, Parameter } from '../interfaces/measurements.interface';
+import { Console } from 'console';
 
 interface MeteomaticsData {
   parameter: string;
@@ -22,9 +23,11 @@ export async function processAndSaveMeasurements(
   let pCount = 0;
   let lCount = 0;
   let vCount = 0
+  console.log('Entrou no saved Parameters: ', parameters, ' e locations: ', locations);
   for (const p of data) {
     pCount++;
-    const parameter = parameters.find((param) => param.code === p.parameter.split(':')[0]);
+    console.log('p: ', pCount, ' code: ', p.parameter)
+    const parameter = parameters.find((param) => param.code === p.parameter);
     if(!parameter) {
       console.log('Não achou parametro em ', pCount);
       continue;
@@ -52,15 +55,17 @@ export async function processAndSaveMeasurements(
             value: d.value,
             batchId,
           }
+
         })
         console.log('Measurement de ', pCount, ':', lCount, ':', vCount, ' é: ', measurement);
+        savedMeasurements.push(measurement);
       }
       vCount = 0;
     }
     lCount = 0;
   }
   pCount = 0;
-  
+
   return savedMeasurements;
   
 }
@@ -77,7 +82,7 @@ export async function scheduleMeasurement(
   const savedMeasurements: Measurement[] = [];
 
   for (const p of data) {
-    const parameter = parameters.find((param) => param.code === p.parameter.split(':')[0]);
+    const parameter = parameters.find((param) => param.code === p.parameter);
     if (!parameter) continue;
 
     for (const c of p.coordinates) {
