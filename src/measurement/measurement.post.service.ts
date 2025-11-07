@@ -13,34 +13,18 @@ export class MeasurementPostService {
   async getAndPost(dto: FetchMeasurementsDto) {
   const username = process.env.METEOMATICS_USER;
   const password = process.env.METEOMATICS_PASS;
-
-  console.log('Entrou no service com ', username, password);
-
   if (!username || !password) throw new Error('Prtecisa das credenciais');
 
   const date = dto.date ?? new Date().toISOString().split('.')[0] + 'Z';
-
-  console.log('Dates: ', date)
-
   const { parameters, invalidParameters } = await findValidParameters(this.prisma, dto.parameters);
-  console.log('Parameters: ', parameters, ' invalids: ', invalidParameters);
   if (parameters.length === 0) return { status: 'error', message: 'Nenhum parâmetro válido encontrado.', invalidParameters };
 
   const locations = await findOrCreateLocations(this.prisma, dto.locations);
-
-  console.log('Locations: ', locations);
-
   const paramCodes = parameters.map(p => p.code).join(',');
   const coordString = locations.map(l => `${l.lat},${l.lon}`).join('+');
 
-  console.log('Param e coord:', paramCodes, coordString)
-
   const meteomaticsData = await fetchMeteomaticsData(username, password, date, paramCodes, coordString);
-  console.log('meteo: ', meteomaticsData);
-
   const batch = await this.prisma.forecastBatch.create({ data: { source: 'meteomatics' } });
-  console.log('Batch: ', batch)
-
   const savedMeasurements = await processAndSaveMeasurements(this.prisma, meteomaticsData.data, parameters, locations, batch.id);
 
     return {
@@ -63,15 +47,11 @@ export class MeasurementPostService {
     if (parameters.length === 0) return { status: 'error', message: 'Nenhum parâmetro válido encontrado.', invalidParameters };
 
     const locations = await findOrCreateLocations(this.prisma, dto.locations);
-
     const paramCodes = parameters.map(p => p.code).join(',');
     const coordString = locations.map(l => `${l.lat},${l.lon}`).join('+');
 
     const meteomaticsData = await fetchMeteomaticsData(username, password, date, paramCodes, coordString);
-
     const savedMeasurements = await scheduleMeasurement(this.prisma, meteomaticsData.data, parameters, locations, scheduleId);
-
-    console.log('saveds: ', savedMeasurements);
 
     return {
       status: 'ok',

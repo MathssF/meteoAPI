@@ -20,33 +20,17 @@ export async function processAndSaveMeasurements(
   batchId: string
 ) {
   const savedMeasurements: Measurement[] = [];
-  let pCount = 0;
-  let lCount = 0;
-  let vCount = 0
-  console.log('Entrou no saved Parameters: ', parameters, ' e locations: ', locations);
   for (const p of data) {
-    pCount++;
-    console.log('p: ', pCount, ' code: ', p.parameter)
     const parameter = parameters.find((param) => param.code === p.parameter);
     if(!parameter) {
-      console.log('Não achou parametro em ', pCount);
       continue;
     }
-
-    console.log("Coordenadas dentro de ", pCount, " São: ", p.coordinates);
-
     for (const c of p.coordinates) {
-      lCount ++;
       const local = locations.find((l) => l.lat === c.lat && l.lon === c.lon);
       if (!local) {
-        console.log('Não achou local em ', lCount);
         continue;
       }
-
-      console.log('Local encontrado em ', pCount, ':', lCount, ' é o local: ', local);
-
       for (const d of c.dates) {
-        vCount ++;
         const measurement = await prisma.measurement.create({
           data: {
             localId: local.id,
@@ -57,17 +41,11 @@ export async function processAndSaveMeasurements(
           }
 
         })
-        console.log('Measurement de ', pCount, ':', lCount, ':', vCount, ' é: ', measurement);
         savedMeasurements.push(measurement);
       }
-      vCount = 0;
     }
-    lCount = 0;
   }
-  pCount = 0;
-
   return savedMeasurements;
-  
 }
 
 
