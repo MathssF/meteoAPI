@@ -7,7 +7,7 @@ import { checkAlerts } from '../tools/utils/measurement-utils/alerts.utils';
 export class MeasurementRandomService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async execute(localId: string, parameterId: string) {
+  async execute(localId: string, parameterId: string, date?: string) {
     const username = process.env.METEOMATICS_USER;
     const password = process.env.METEOMATICS_PASS;
     if (!username || !password)
@@ -19,15 +19,16 @@ export class MeasurementRandomService {
     const parameter = await this.prisma.parameter.findUnique({
       where: { id: parameterId },
     });
-    if (!parameter) throw new Error(`Parâmetro ${parameterId} não encontrado.`);
+    if (!parameter)
+      throw new Error(`Parâmetro ${parameterId} não encontrado.`);
 
-    const date = new Date().toISOString().split('.')[0] + 'Z';
+    const dateToUse = date ?? new Date().toISOString().split('.')[0] + 'Z';
     const paramCodes = parameter.code;
     const coordString = `${local.lat},${local.lon}`;
 
     console.log('meteomatics utils, coord:', coordString);
 
-    const url = `https://api.meteomatics.com/${date}/${paramCodes}/${coordString}/json`;
+    const url = `https://api.meteomatics.com/${dateToUse}/${paramCodes}/${coordString}/json`;
     const response = await axios.get(url, { auth: { username, password } });
 
     const data = response.data;
@@ -59,5 +60,41 @@ export class MeasurementRandomService {
       measurement,
       alertsTriggered: alertResults.filter((a) => a.triggered),
     };
+  }
+
+  async getRandomIds(localCount: number, parameterCount: number) {
+    const maxLocalCount = Math.min(localCount, 3);
+    const maxParamCount = Math.min(parameterCount, 3);
+
+    const allLocals = await this.prisma.local.findMany({ select: { id: true } });
+    const allParams = await this.prisma.parameter.findMany({ select: { id: true } });
+
+    if (allLocals.length === 0 || allParams.length === 0)
+      throw new Error('Não há locais ou parâmetros cadastrados.');
+
+    const randomLocals = this.pickRandomItems(allLocals.map(l => l.id), maxLocalCount);
+    const randomParams = this.pickRandomItems(allParams.map(p => p.id), maxParamCount);
+
+    return { randomLocals, randomParams };
+  }
+
+  async executeRandomBatch(localCount: number, parameterCount: number, date?: string) {
+    const { randomLocals, randomParams } = await this.getRandomIds(localCount, parameterCount);
+
+    const results: any[] = [];
+
+    for (const localId of randomLocals) {
+      for (const parameterId of randomParams) {
+        const measurement = await this.execute(localId, parameterId, date);
+        results.push(measurement);
+      }
+    }
+
+    return results;
+  }
+
+  private pickRandomItems<T>(array: T[], count: number): T[] {
+    const shuffled = [...array].sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, count);
   }
 }
