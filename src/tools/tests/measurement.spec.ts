@@ -111,15 +111,11 @@ describe('', () => {
 
     let meansures: any[] = []
 
-    result.randomLocals.forEach((elem) => {
-      result.randomParams.forEach((item) => {
-
+    result.randomLocals.forEach(async (elem) => {
+      result.randomParams.forEach(async (item) => {
+        const data = await randomService.execute(elem, item);
+        meansures.push(data);
       })
-      // expect(measurement).toHaveProperty('localId');
-      // expect(measurement).toHaveProperty('parameterId');
-      // expect(measurement).toHaveProperty('value');
-      // expect(isValidValueForParameter(measurement.parameterId, measurement.value)).toBe(true);
-      // expect(measurement.date).toBe(date);
     });
   });
 
@@ -133,15 +129,11 @@ describe('', () => {
 
     let meansures: any[] = []
 
-    // const uniqueCities = new Set(result.map(r => r.localId));
-    // expect(uniqueCities.size).toBeLessThanOrEqual(3);
-
-    result.randomLocals.forEach((elem) => {
-      result.randomParams.forEach((item) => {
-
+    result.randomLocals.forEach(async (elem) => {
+      result.randomParams.forEach(async (item) => {
+        const data = await randomService.execute(elem, item);
+        meansures.push(data);
       })
-      // expect(isValidValueForParameter(elem.parameterId, elem.value)).toBe(true);
-      // expect(elem.date).toBe(date);
     });
   });
 })
