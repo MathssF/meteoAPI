@@ -71,5 +71,24 @@ describe('', () => {
     randomService = module.get<MeasurementRandomService>(MeasurementRandomService);
   });
 
-  
+  const isValidValueForParameter = (parameterId: string, value: number) => {
+    const param = mockParameterValues.find(p => p.parameterId === parameterId);
+    return param ? param.possibleValues.includes(value) : false;
+  };
+
+  it('deve gerar 2 medições aleatórias com idCounts [1, 2]', async () => {
+    const date = new Date().toISOString();
+    const result = await service.random({ idCounts: [1, 2], date });
+
+    expect(Array.isArray(result)).toBe(true);
+    expect(result.length).toBe(2);
+
+    result.forEach((measurement) => {
+      expect(measurement).toHaveProperty('localId');
+      expect(measurement).toHaveProperty('parameterId');
+      expect(measurement).toHaveProperty('value');
+      expect(isValidValueForParameter(measurement.parameterId, measurement.value)).toBe(true);
+      expect(measurement.date).toBe(date);
+    });
+  });
 })
