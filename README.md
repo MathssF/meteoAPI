@@ -40,6 +40,10 @@ Semelhante as tabelas temos:
 Nas rota principal de Measurement, você pode testar, usando o conteúdo do arquivo:
 /workspaces/meteoAPI/src/tools/dev/resources/measurement.test.json
 
+Irá dar uma resposta semelhante a esta:
+
+![Exemplo de Resposta](docs/response-measurement.png)
+
 Além disto, passo a passo para Testar os Alertas:
 
 1- Faça uma medição aleatória.
