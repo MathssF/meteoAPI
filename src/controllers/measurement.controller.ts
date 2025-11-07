@@ -56,4 +56,31 @@ export class MeasurementController {
   ) {
     return this.fetchService.find({ id, batchId, scheduleId });
   }
+
+  /**
+   * Gera uma medição única aleatória a partir de um local e um parâmetro.
+   * Usa a API Meteomatics para obter o valor atual e cria o registro no banco.
+   */
+  @Post('random')
+  @ApiOperation({
+    summary: 'Gerar uma medição aleatória via Meteomatics',
+    description:
+      'Obtém uma medição em tempo real a partir de um `localId` e `parameterId` fornecidos. Cria a medição no banco e dispara alertas caso existam.',
+  })
+  @ApiQuery({
+    name: 'localId',
+    required: true,
+    description: 'ID do local de onde a medição será feita',
+  })
+  @ApiQuery({
+    name: 'parameterId',
+    required: true,
+    description: 'ID do parâmetro a ser medido',
+  })
+  async random(
+    @Query('localId') localId: string,
+    @Query('parameterId') parameterId: string,
+  ) {
+    return this.randomService.execute(localId, parameterId);
+  }
 }
