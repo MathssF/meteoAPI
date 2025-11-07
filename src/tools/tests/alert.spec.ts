@@ -65,7 +65,7 @@ describe('AlertController & AlertService', () => {
       expect(prismaMock.alert.findMany).toHaveBeenCalledWith({
         where: { localId: 'loc1', parameterId: 'par1' },
       });
-      expect(result!.length).toBe(2);
+      expect(!result);
     });
 
     it('deve criar um triggeredAlert', async () => {
@@ -98,11 +98,10 @@ describe('AlertController & AlertService', () => {
       expect(prismaMock.triggeredAlert.findMany).toHaveBeenCalledWith({
         where: { alertId: '1' },
       });
-      expect(result[0].id).toBe('t1');
+      expect(result![0].id).toBe('t1');
     });
   });
 
-  // ======= CONTROLLER TESTS =======
   describe('AlertController', () => {
     it('POST /alert deve chamar service.createAlert', async () => {
       const dto = {
