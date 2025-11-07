@@ -18,7 +18,7 @@ const prismaMock = {
   },
 };
 
-describe('',() => {
+describe('Testando o Controller e o Service dos módulos Básicos: Local e Parameter',() => {
   let localService: LocalService;
   let parameterService: ParameterService;
   let localController: LocalController;
@@ -112,6 +112,41 @@ describe('',() => {
       prismaMock.parameter.findMany.mockResolvedValue([{ id: 'p4', name: 'Pressão' }]);
       const result = await parameterService.find({});
       expect(result).toEqual([{ id: 'p4', name: 'Pressão' }]);
+    });
+  });
+
+  describe('LocalController', () => {
+    it('deve chamar service.create ao criar local', async () => {
+      const dto = { name: 'Manaus', lat: -3.1, lon: -60.02 };
+      prismaMock.local.create.mockResolvedValue({ id: 'l5', ...dto });
+
+      const result = await localController.create(dto);
+      expect(result).toEqual({ id: 'l5', ...dto });
+      expect(prismaMock.local.create).toHaveBeenCalled();
+    });
+
+    it('deve chamar service.find ao buscar locais', async () => {
+      prismaMock.local.findMany.mockResolvedValue([{ id: 'l6', name: 'Natal' }]);
+      const result = await localController.find(undefined, undefined, undefined, 'Natal');
+      expect(result).toEqual([{ id: 'l6', name: 'Natal' }]);
+    });
+  });
+
+
+  describe('ParameterController', () => {
+    it('deve chamar service.create ao criar parâmetro', async () => {
+      const dto = { code: 'wind_speed', name: 'Vento', unit: 'm/s' };
+      prismaMock.parameter.create.mockResolvedValue({ id: 'p6', ...dto });
+
+      const result = await parameterController.create(dto);
+      expect(result).toEqual({ id: 'p6', ...dto });
+      expect(prismaMock.parameter.create).toHaveBeenCalled();
+    });
+
+    it('deve chamar service.find ao buscar parâmetros', async () => {
+      prismaMock.parameter.findMany.mockResolvedValue([{ id: 'p7', name: 'Radiação' }]);
+      const result = await parameterController.find(undefined, 'Radiação');
+      expect(result).toEqual([{ id: 'p7', name: 'Radiação' }]);
     });
   });
 });
