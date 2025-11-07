@@ -1,6 +1,6 @@
 import { PrismaService } from '../../../core/data/prisma/prisma.service';
 
-interface CheckAlertResult {
+export interface CheckAlertResult {
   alertId: string;
   localId: string;
   parameterId: string;
