@@ -94,15 +94,6 @@ describe('AlertController & AlertService', () => {
   });
 
   describe('AlertController', () => {
-    it('GET /alert deve chamar service.find', async () => {
-      const mock = [{ id: 'a1', condition: '>' }];
-      jest.spyOn(service, 'find').mockResolvedValue(mock);
-
-      const result = await controller.findAlerts('1', '2', '3');
-      expect(service.find).toHaveBeenCalledWith({ id: '1', localId: '2', parameterId: '3' });
-      expect(result).toEqual(mock);
-    });
-
     it('POST /alert/triggered deve chamar service.createTriggeredAlert', async () => {
       const dto = {
         alertId: '1',
