@@ -69,6 +69,31 @@ describe('', () => {
 
     controller = module.get<MeasurementController>(MeasurementController);
     randomService = module.get<MeasurementRandomService>(MeasurementRandomService);
+
+  jest
+    .spyOn(randomService, 'execute')
+    .mockImplementation(async (localId, parameterId, date?: string) => {
+      const param = mockParameterValues.find((p) => p.parameterId === parameterId);
+      const value = param
+        ? param.possibleValues[Math.floor(Math.random() * param.possibleValues.length)]
+        : 0;
+
+      return {
+        status: 'ok',
+        measurement: {
+        id: crypto.randomUUID(),    // ou outro gerador de UUID
+        localId,
+        parameterId,
+        value,
+        timestamp: new Date(),
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        batchId: null,
+        scheduleId: null,
+      },
+        alertsTriggered: [],
+      };
+    });
   });
 
   const isValidValueForParameter = (parameterId: string, value: number) => {
@@ -78,15 +103,33 @@ describe('', () => {
 
   it('deve gerar 2 medições aleatórias com idCounts [1, 2]', async () => {
     const date = new Date().toISOString();
-    const result = await service.random({ idCounts: [1, 2], date });
+    const result = await randomService.getRandomIds({ localCount: 1, parameterCount: 2 });
 
     expect(Array.isArray(result)).toBe(true);
-    expect(result.length).toBe(2);
+    expect(result.randomLocals).toBe(1);
+    expect(result.randomParams).toBe(2);
 
     result.forEach((measurement) => {
       expect(measurement).toHaveProperty('localId');
       expect(measurement).toHaveProperty('parameterId');
       expect(measurement).toHaveProperty('value');
+      expect(isValidValueForParameter(measurement.parameterId, measurement.value)).toBe(true);
+      expect(measurement.date).toBe(date);
+    });
+  });
+
+
+  it('deve gerar 6 medições quando idCounts for [4, 2], considerando 3 cidades distintas', async () => {
+    const date = new Date().toISOString();
+    const result = await randomService.getRandomIds({ localCount: 4, parameterCount: 2 });
+
+    expect(result.randomLocals).toBe(3);
+    expect(result.randomParams).toBe(2);
+
+    const uniqueCities = new Set(result.map(r => r.localId));
+    expect(uniqueCities.size).toBeLessThanOrEqual(3);
+
+    result.forEach((measurement) => {
       expect(isValidValueForParameter(measurement.parameterId, measurement.value)).toBe(true);
       expect(measurement.date).toBe(date);
     });
