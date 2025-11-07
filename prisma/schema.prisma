@@ -80,9 +80,9 @@ model Alert {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  // local       Local     @relation(fields: [localId], references: [id])
-  // parameter   Parameter @relation(fields: [parameterId], references: [id])
-  // triggeredAlerts TriggeredAlert[]
+  local       Local     @relation(fields: [localId], references: [id])
+  parameter   Parameter @relation(fields: [parameterId], references: [id])
+  triggeredAlerts TriggeredAlert[]
 }
 
 model Schedule {
@@ -95,12 +95,12 @@ model Schedule {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
-  // local        Local     @relation(fields: [localId], references: [id])
-  // parameter    Parameter @relation(fields: [parameterId], references: [id])
-  // measurements Measurement[]
+  local        Local     @relation(fields: [localId], references: [id])
+  parameter    Parameter @relation(fields: [parameterId], references: [id])
+  measurements Measurement[]
 
-  // @@index([localId, time])
-  // @@index([parameterId, when])
+  @@index([localId, time])
+  @@index([parameterId, when])
 }
 
 model TriggeredAlert {
