@@ -103,7 +103,7 @@ describe('', () => {
 
   it('deve gerar 2 medições aleatórias com idCounts [1, 2]', async () => {
     const date = new Date().toISOString();
-    const result = await randomService.getRandomIds({ localCount: 1, parameterCount: 2 });
+    const result = await randomService.getRandomIds(1, 2);
 
     expect(Array.isArray(result)).toBe(true);
     expect(result.randomLocals).toBe(1);
@@ -121,7 +121,7 @@ describe('', () => {
 
   it('deve gerar 6 medições quando idCounts for [4, 2], considerando 3 cidades distintas', async () => {
     const date = new Date().toISOString();
-    const result = await randomService.getRandomIds({ localCount: 4, parameterCount: 2 });
+    const result = await randomService.getRandomIds(4, 2);
 
     expect(result.randomLocals).toBe(3);
     expect(result.randomParams).toBe(2);
