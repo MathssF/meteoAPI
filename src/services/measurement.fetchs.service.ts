@@ -1,34 +1,30 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../core/data/prisma/prisma.service';
 
 @Injectable()
 export class MeasurementFetchService {
   constructor(private prisma: PrismaService) {}
 
-  async findAll() {
+  async find(filters: { id?: string; batchId?: string; scheduleId?: string }) {
+    const { id, batchId, scheduleId } = filters;
+
+    if (id) {
+      const measurement = await this.prisma.measurement.findUnique({
+        where: { id },
+        include: { local: true, parameter: true, batch: true, schedule: true },
+      });
+      if (!measurement)
+        throw new NotFoundException(`Measurement ${id} não encontrada`);
+      return measurement;
+    }
+
+    const where: any = {};
+    if (batchId) where.batchId = batchId;
+    if (scheduleId) where.scheduleId = scheduleId;
+
     return this.prisma.measurement.findMany({
+      where,
       include: { local: true, parameter: true, batch: true, schedule: true },
-    });
-  }
-
-  async findById(id: string) {
-    return this.prisma.measurement.findUnique({
-      where: { id },
-      include: { local: true, parameter: true, batch: true, schedule: true },
-    });
-  }
-
-  async findByBatch(batchId: string) {
-    return this.prisma.measurement.findMany({
-      where: { batchId },
-      include: { local: true, parameter: true },
-    });
-  }
-
-  async findBySchedule(scheduleId: string) {
-    return this.prisma.measurement.findMany({
-      where: { scheduleId },
-      include: { local: true, parameter: true },
     });
   }
 }
