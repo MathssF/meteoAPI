@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from './prisma.service';
+import { PrismaService } from '../core/data/prisma/prisma.service';
 import { CreateTriggeredAlertDto } from '../tools/dto/create-triggered-alert.dto';
 
 @Injectable()

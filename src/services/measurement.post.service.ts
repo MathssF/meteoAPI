@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from './prisma.service';
+import { PrismaService } from '../core/data/prisma/prisma.service';
 import { FetchMeasurementsDto } from '../tools/dto/fetch-measurements.dto';
 import { findValidParameters } from '../tools/utils/measurement-utils/parameter.utils';
 import { fetchMeteomaticsData } from '../tools/utils/measurement-utils/meteomatics.utils';

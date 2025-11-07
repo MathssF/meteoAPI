@@ -1,4 +1,4 @@
-import { PrismaService } from '../../../services/prisma.service';
+import { PrismaService } from '../../../core/data/prisma/prisma.service';
 
 interface CheckAlertResult {
   alertId: string;

@@ -6,7 +6,7 @@ import { LocalModule } from './basicos/local.module';
 import { ParameterModule } from './basicos/parameter.module';
 import { MeasurementModule } from './ponta/measurement.module';
 import { AlertModule } from './basicos/alert.module';
-import { PrismaModule } from './prisma.module';
+import { PrismaModule } from '../core/data/prisma/prisma.module';
 import { ScheduleModule } from './ponta/schedule.module';
 import { ScheduleModule as NestScheduleModule } from '@nestjs/schedule';
 import { ScheduleService } from '../services/schedule.service';

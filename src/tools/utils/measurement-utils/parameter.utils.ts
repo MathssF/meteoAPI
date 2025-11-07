@@ -1,4 +1,4 @@
-import { PrismaService } from '../../../services/prisma.service';
+import { PrismaService } from '../../../core/data/prisma/prisma.service';
 import { Parameter } from '../../interfaces/measurements.interface';
 
 export async function findValidParameters(prisma: PrismaService, inputParams: any[]) {
