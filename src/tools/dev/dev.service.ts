@@ -11,7 +11,7 @@ export class DevService {
     await mainSeed(this.prisma);
   }
 
-  /*
+  
   // ---- SCHEDULES ----
   async activateAllSchedules() {
     const result = await this.prisma.schedule.updateMany({
@@ -31,14 +31,12 @@ export class DevService {
   async findAllBatches() {
     return this.prisma.forecastBatch.findMany({
       orderBy: { runAt: 'desc' },
-      include: { measurements: true },
     });
   }
 
   async findBatchById(id: string) {
     return this.prisma.forecastBatch.findUnique({
       where: { id },
-      include: { measurements: true },
     });
   }
 
@@ -55,7 +53,6 @@ export class DevService {
         },
       },
       orderBy: { runAt: 'desc' },
-      include: { measurements: true },
     });
   }
 
@@ -74,5 +71,5 @@ export class DevService {
       return updatedParameter;
     } else return null;
   }
-  */
+  
 }
