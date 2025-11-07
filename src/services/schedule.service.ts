@@ -23,7 +23,7 @@ export class ScheduleService {
     if (id) {
       const schedule = await this.prisma.schedule.findUnique({
         where: { id },
-        include: { local: true, parameter: true },
+        // include: { local: true, parameter: true },
       });
       if (!schedule) throw new NotFoundException(`Schedule ${id} não encontrado`);
       return schedule;
@@ -35,7 +35,7 @@ export class ScheduleService {
 
     return this.prisma.schedule.findMany({
       where,
-      include: { local: true, parameter: true },
+      // include: { local: true, parameter: true },
     });
   }
 
@@ -66,7 +66,7 @@ export class ScheduleService {
 
     const schedules = await this.prisma.schedule.findMany({
       where: { active: true, time: currentTime },
-      include: { local: true, parameter: true },
+      // include: { local: true, parameter: true },
     });
 
     for (const s of schedules) {
