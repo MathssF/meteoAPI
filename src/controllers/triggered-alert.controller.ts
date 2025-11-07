@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Param, Query } from '@nestjs/common';
-import { TriggeredAlertService } from '../../services/triggered-alert.service';
-import { CreateTriggeredAlertDto } from '../../tools/dto/create-triggered-alert.dto';
+import { TriggeredAlertService } from '../services/triggered-alert.service';
+import { CreateTriggeredAlertDto } from '../tools/dto/create-triggered-alert.dto';
 
 @Controller('triggered-alert')
 export class TriggeredAlertController {

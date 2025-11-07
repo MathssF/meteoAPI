@@ -1,43 +1,36 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Query } from '@nestjs/common';
 import { AlertService } from '../services/alert.service';
 import { CreateAlertDto } from '../tools/dto/create-alert.dto';
+import { CreateTriggeredAlertDto } from '../tools/dto/create-triggered-alert.dto';
 
 @Controller('alert')
 export class AlertController {
-  constructor(private readonly alertService: AlertService) {}
+  constructor(private readonly service: AlertService) {}
 
-  // POST /alert
   @Post()
-    create(@Body() dto: CreateAlertDto) {
-      return this.alertService.create(dto);
-    }
+  createAlert(@Body() dto: CreateAlertDto) {
+    return this.service.createAlert(dto);
+  }
 
-  // GET /alert
   @Get()
-  findAll() {
-    return this.alertService.findAll();
-  }
-
-  // GET /alert/by-local/:localId
-  @Get('by-local/:localId')
-  findByLocal(@Param('localId') localId: string) {
-    return this.alertService.findByLocalId(localId);
-  }
-
-  // GET /alert/by-parameter/:parameterId
-  @Get('by-parameter/:parameterId')
-  findByParameter(@Param('parameterId') parameterId: string) {
-    return this.alertService.findByParameterId(parameterId);
-  }
-
-  
-
-  // GET /alert/filter?localId=...&parameterId=...
-  @Get('filter')
-  findByLocalAndParameter(
-    @Query('localId') localId: string,
-    @Query('parameterId') parameterId: string,
+  findAlerts(
+    @Query('id') id?: string,
+    @Query('localId') localId?: string,
+    @Query('parameterId') parameterId?: string,
   ) {
-    return this.alertService.findByLocalAndParameter(localId, parameterId);
+    return this.service.find({ id, localId, parameterId });
+  }
+
+  @Post('triggered')
+  createTriggeredAlert(@Body() dto: CreateTriggeredAlertDto) {
+    return this.service.createTriggeredAlert(dto);
+  }
+
+  @Get('triggered')
+  findTriggeredAlerts(
+    @Query('id') id?: string,
+    @Query('alertId') alertId?: string,
+  ) {
+    return this.service.findTriggered({ id, alertId });
   }
 }
