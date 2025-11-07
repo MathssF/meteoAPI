@@ -13,9 +13,9 @@ export async function checkAlerts(
   prisma: PrismaService,
   localId: string,
   parameterId: string,
-  value: number
+  value: number,
+  measurementId: string
 ): Promise<CheckAlertResult[]> {
-  // Busca alertas ativos para o local e parâmetro
   const alerts = await prisma.alert.findMany({
     where: {
       localId,
@@ -32,8 +32,9 @@ export async function checkAlerts(
     },
   });
 
-  // Verifica condições e adiciona a mensagem ao retorno
-  const results: CheckAlertResult[] = alerts.map(alert => {
+  const results: CheckAlertResult[] = [];
+
+  for (const alert of alerts) {
     let triggered = false;
 
     switch (alert.condition) {
@@ -60,7 +61,7 @@ export async function checkAlerts(
         triggered = false;
     }
 
-    return {
+    const result: CheckAlertResult = {
       alertId: alert.id,
       localId: alert.localId,
       parameterId: alert.parameterId,
@@ -68,7 +69,19 @@ export async function checkAlerts(
       triggered,
       message: alert.message ?? null,
     };
-  });
+
+    if (triggered) {
+      await prisma.triggeredAlert.create({
+        data: {
+          alertId: alert.id,
+          measurementId,
+          value,
+        },
+      });
+    }
+
+    results.push(result);
+  }
 
   return results;
 }
