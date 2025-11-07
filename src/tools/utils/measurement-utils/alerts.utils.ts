@@ -75,8 +75,28 @@ export async function processMeasurementAlerts(
   return results;
 }
 
-export async function handleTriggeredAlerts(triggeredAlerts: CheckAlertResult[]) {
+export async function handleTriggeredAlerts(
+  prisma: PrismaService,
+  triggeredAlerts: CheckAlertResult[]
+) {
+  const results = [];
+
   for (const a of triggeredAlerts) {
-    // Lógica ainda a ser implementada
+    const alert = await prisma.alert.findUnique({
+      where: { id: a.alertId },
+      select: { id: true, message: true },
+    });
+
+    const triggered = await prisma.triggeredAlert.create({
+      data: {
+        alertId: a.alertId,
+        value: a.value,
+        message: alert?.message ?? `Alerta disparado para parâmetro ${a.parameterId}`,
+      },
+    });
+
+    results.push(triggered);
   }
+
+  return results;
 }
