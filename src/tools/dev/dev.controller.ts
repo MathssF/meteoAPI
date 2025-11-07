@@ -13,8 +13,6 @@ export class DevController {
     return { message: '🌱 Seeds executadas com sucesso!' };
   }
 
-  /*
-
   // ---- SCHEDULES ----
   @Post('schedules/activate-all')
   async activateAll() {
@@ -62,6 +60,4 @@ export class DevController {
       locals, parameters
     }
   }
-
-  */
 }
