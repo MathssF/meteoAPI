@@ -17,9 +17,9 @@ model Local {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  measurements Measurement[]
-  alerts       Alert[]
-  schedules    Schedule[]
+  // measurements Measurement[]
+  // alerts       Alert[]
+  // schedules    Schedule[]
 }
 
 model Parameter {
@@ -31,9 +31,9 @@ model Parameter {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  measurements Measurement[]
-  alerts       Alert[]
-  schedules    Schedule[]
+  // measurements Measurement[]
+  // alerts       Alert[]
+  // schedules    Schedule[]
 }
 
 model Measurement {
@@ -47,16 +47,16 @@ model Measurement {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
-  local         Local       @relation(fields: [localId], references: [id])
-  parameter     Parameter   @relation(fields: [parameterId], references: [id])
-  batch         ForecastBatch? @relation(fields: [batchId], references: [id])
-  schedule      Schedule?   @relation(fields: [scheduleId], references: [id])
-  triggeredAlerts TriggeredAlert[]
+  // local         Local       @relation(fields: [localId], references: [id])
+  // parameter     Parameter   @relation(fields: [parameterId], references: [id])
+  // batch         ForecastBatch? @relation(fields: [batchId], references: [id])
+  // schedule      Schedule?   @relation(fields: [scheduleId], references: [id])
+  // triggeredAlerts TriggeredAlert[]
 
-  @@index([localId, timestamp])
-  @@index([parameterId, timestamp])
-  @@index([batchId])
-  @@index([scheduleId])
+  // @@index([localId, timestamp])
+  // @@index([parameterId, timestamp])
+  // @@index([batchId])
+  // @@index([scheduleId])
 }
 
 model ForecastBatch {
@@ -66,7 +66,7 @@ model ForecastBatch {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
-  measurements Measurement[]
+  // measurements Measurement[]
 }
 
 model Alert {
@@ -80,9 +80,9 @@ model Alert {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  local       Local     @relation(fields: [localId], references: [id])
-  parameter   Parameter @relation(fields: [parameterId], references: [id])
-  triggeredAlerts TriggeredAlert[]
+  // local       Local     @relation(fields: [localId], references: [id])
+  // parameter   Parameter @relation(fields: [parameterId], references: [id])
+  // triggeredAlerts TriggeredAlert[]
 }
 
 model Schedule {
@@ -95,12 +95,12 @@ model Schedule {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
-  local        Local     @relation(fields: [localId], references: [id])
-  parameter    Parameter @relation(fields: [parameterId], references: [id])
-  measurements Measurement[]
+  // local        Local     @relation(fields: [localId], references: [id])
+  // parameter    Parameter @relation(fields: [parameterId], references: [id])
+  // measurements Measurement[]
 
-  @@index([localId, time])
-  @@index([parameterId, when])
+  // @@index([localId, time])
+  // @@index([parameterId, when])
 }
 
 model TriggeredAlert {
@@ -110,6 +110,6 @@ model TriggeredAlert {
   value           Float
   createdAt       DateTime    @default(now())
 
-  alert           Alert       @relation(fields: [alertId], references: [id])
-  measurement     Measurement @relation(fields: [measurementId], references: [id])
+  // alert           Alert       @relation(fields: [alertId], references: [id])
+  // measurement     Measurement @relation(fields: [measurementId], references: [id])
 }
