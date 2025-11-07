@@ -85,7 +85,7 @@ export class MeasurementRandomService {
 
     for (const localId of randomLocals) {
       for (const parameterId of randomParams) {
-        const measurement = await this.execute(localId, parameterId, date);
+        const measurement = await this.execute(localId as string, parameterId as string, date as string);
         results.push(measurement);
       }
     }
