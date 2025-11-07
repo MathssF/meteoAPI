@@ -3,22 +3,25 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { Measurement, Local, Parameter } from '../interfaces/measurements.interface';
 
 interface MeteomaticsData {
-  locarions: Local[];
-  parameters: Parameter[];
-  date: Date;
-  batch: string;
-  value: number;
+  parameter: string;
+  coordinates: {
+    lat: number;
+    lon: number;
+    dates: { date: string; value: number }[];
+  }[];
 }
 
 export async function processAndSaveMeasurements(
   prisma: PrismaService,
-  data: MeteomaticsData,
+  data: MeteomaticsData[],
+  parameters: Parameter[],
+  locations: Local[],
   batchId: string
 ) {
   const savedMeasurements: Measurement[] = [];
   
-  for (const p of data.parameters) {
-    for (const l of data.locarions) {
+  for (const p of parameters) {
+    for (const l of locations) {
       const measurement = await prisma.measurement.create({
         data: {
           localId: l.id,

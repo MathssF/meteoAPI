@@ -41,7 +41,7 @@ export class MeasurementPostService {
   const batch = await this.prisma.forecastBatch.create({ data: { source: 'meteomatics' } });
   console.log('Batch: ', batch)
 
-  const savedMeasurements = await processAndSaveMeasurements(this.prisma, meteomaticsData.data, batch.id);
+  const savedMeasurements = await processAndSaveMeasurements(this.prisma, meteomaticsData.data, parameters, locations, batch.id);
 
     return {
       status: 'ok',
@@ -69,7 +69,7 @@ export class MeasurementPostService {
 
     const meteomaticsData = await fetchMeteomaticsData(username, password, date, paramCodes, coordString);
 
-    const savedMeasurements = await scheduleMeasurement(this.prisma, meteomaticsData.data, scheduleId);
+    const savedMeasurements = await scheduleMeasurement(this.prisma, meteomaticsData.data, parameters, locations, scheduleId);
 
     console.log('saveds: ', savedMeasurements);
 
