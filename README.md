@@ -2,7 +2,7 @@
 
 Este Projeto visa pegar as API do Meteomatics (https://www.meteomatics.com/en/weather-api/), e criar uma persistência própria, para poder ser posteriormente usada como Api.
 
-îndice: 
+îndice: /n
 1- Estrutura
 2- Tecnologias e Escolhas
 3- Instalando Localmente
