@@ -78,5 +78,40 @@ describe('',() => {
     });
   });
 
-  
+
+
+  describe('ParameterService', () => {
+    it('deve criar um parâmetro', async () => {
+      const dto = { code: 't_2m', name: 'Temperatura', unit: '°C' };
+      prismaMock.parameter.create.mockResolvedValue({ id: 'p1', ...dto });
+
+      const result = await parameterService.create(dto);
+      expect(result).toEqual({ id: 'p1', ...dto });
+      expect(prismaMock.parameter.create).toHaveBeenCalledWith({ data: dto });
+    });
+
+    it('deve buscar parâmetro por ID', async () => {
+      prismaMock.parameter.findUnique.mockResolvedValue({ id: 'p1', code: 't_2m' });
+      const result = await parameterService.find({ id: 'p1' });
+      expect(result).toEqual({ id: 'p1', code: 't_2m' });
+    });
+
+    it('deve buscar parâmetro por código', async () => {
+      prismaMock.parameter.findMany.mockResolvedValue([{ id: 'p2', code: 't_2m' }]);
+      const result = await parameterService.find({ code: 't_2m' });
+      expect(result).toEqual([{ id: 'p2', code: 't_2m' }]);
+    });
+
+    it('deve buscar parâmetro por nome', async () => {
+      prismaMock.parameter.findMany.mockResolvedValue([{ id: 'p3', name: 'Umidade' }]);
+      const result = await parameterService.find({ name: 'Umidade' });
+      expect(result).toEqual([{ id: 'p3', name: 'Umidade' }]);
+    });
+
+    it('deve listar todos os parâmetros', async () => {
+      prismaMock.parameter.findMany.mockResolvedValue([{ id: 'p4', name: 'Pressão' }]);
+      const result = await parameterService.find({});
+      expect(result).toEqual([{ id: 'p4', name: 'Pressão' }]);
+    });
+  });
 });
