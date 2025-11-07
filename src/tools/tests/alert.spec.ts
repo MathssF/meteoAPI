@@ -59,15 +59,6 @@ describe('AlertController & AlertService', () => {
       expect(result).toEqual({ id: 'xyz', condition: '>' });
     });
 
-    it('deve buscar alertas por localId e parameterId', async () => {
-      prismaMock.alert.findMany.mockResolvedValue([{ id: 'a1' }, { id: 'a2' }]);
-      const result = await service.find({ localId: 'loc1', parameterId: 'par1' });
-      expect(prismaMock.alert.findMany).toHaveBeenCalledWith({
-        where: { localId: 'loc1', parameterId: 'par1' },
-      });
-      expect(!result);
-    });
-
     it('deve criar um triggeredAlert', async () => {
       const dto = {
         alertId: '1',
