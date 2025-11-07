@@ -117,6 +117,8 @@ describe('', () => {
         meansures.push(data);
       })
     });
+
+    expect(meansures.length).toBe(2);
   });
 
 
@@ -135,5 +137,7 @@ describe('', () => {
         meansures.push(data);
       })
     });
+
+    expect(meansures.length).toBe(6);
   });
 })
