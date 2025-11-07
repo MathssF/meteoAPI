@@ -2,7 +2,7 @@ import { IsArray, IsOptional, IsString, ValidateNested, IsNumber } from 'class-v
 import { Type } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-class LocationInput {
+export class LocationInput {
   @ApiPropertyOptional({ description: 'ID da cidade' })
   @IsOptional()
   @IsString()
@@ -24,7 +24,7 @@ class LocationInput {
   lon?: number;
 }
 
-class ParameterInput {
+export class ParameterInput {
   @ApiPropertyOptional({ description: 'ID do parâmetro utilizado' })
   @IsOptional()
   @IsString()
