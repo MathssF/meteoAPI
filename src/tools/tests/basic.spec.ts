@@ -18,4 +18,11 @@ const prismaMock = {
   },
 };
 
-describe(() => {})
+describe('',() => {
+  let localService: LocalService;
+  let parameterService: ParameterService;
+  let localController: LocalController;
+  let parameterController: ParameterController;
+
+  beforeEach(async () => {})
+})
