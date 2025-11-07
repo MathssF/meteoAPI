@@ -5,7 +5,7 @@ import { MeasurementFetchService } from '../services/measurement.fetchs.service'
 import { FetchMeasurementsDto } from '../tools/dto/fetch-measurements.dto';
 
 /**
- * Controlador responsável pelas medições obtidas via integração com a Meteomatics
+ * Controller responsável pelas medições obtidas via integração com a Meteomatics
  * e pelo acesso aos registros já armazenados no banco de dados.
  */
 @ApiTags('Medições')
