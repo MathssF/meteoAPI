@@ -11,6 +11,7 @@ import { ScheduleController } from 'src/controllers/schedule.controller';
 import { AlertService } from 'src/services/alert.service';
 import { AlertController } from 'src/controllers/alert.controller';
 import { PrismaService } from 'src/core/data/prisma/prisma.service';
+import { Local, Parameter, Measurement } from '../interfaces/measurements.interface';
 
 describe('', () => {
   let controller: MeasurementController;
@@ -141,7 +142,22 @@ describe('', () => {
     expect(meansures.length).toBe(6);
   });
 
-  it('', () => {
-    //
+  it('Testar o Post', async () => {
+    const testLocal1: Partial<Local>[] = [
+      {localId: "3729e756-4536-4570-87ec-b90c331af3ef"},
+      {localId: "e330384c-1b3b-44f3-9a78-76898e91981b"},
+      {localId: "invalidID"},
+    ];
+    const testLical2: Partial<Local>[] = [
+      {name: 'Salvador'},
+      {lat: -14.8615, lon: -40.8445}
+    ];
+    const testParameter: Partial<Parameter>[] = [
+      {parameterId: "06d4c780-338f-4ab6-a361-20c62801998a"},
+      {parameterId: "invalidID"},
+      {code: "precip_1h:mm"}
+    ];
+
+    const result1 = await postService.executeFetch(testLocal1, testParameter)
   })
 })
