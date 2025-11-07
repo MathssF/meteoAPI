@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { DevModule } from '../tools/dev/dev.module';
 import { MeasurementModule } from './ponta/measurement.module';
 import { PrismaModule } from '../core/data/prisma/prisma.module';
 import { ScheduleModule } from './ponta/schedule.module';
@@ -13,8 +12,7 @@ import { BasicModule } from './basic.module';
     MeasurementModule,
     ScheduleModule,
     NestScheduleModule.forRoot(),
-    PrismaModule,
-    DevModule,
+    PrismaModule
   ],
   controllers: [],
   providers: [ScheduleService],
