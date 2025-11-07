@@ -3,58 +3,37 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { Measurement, Local, Parameter } from '../interfaces/measurements.interface';
 
 interface MeteomaticsData {
-  parameter: string;
-  coordinates: {
-    lat: number;
-    lon: number;
-    dates: { date: string; value: number }[];
-  }[];
+  locarions: Local[];
+  parameters: Parameter[];
+  date: Date;
+  batch: string;
+  value: number;
 }
 
 export async function processAndSaveMeasurements(
   prisma: PrismaService,
-  data: MeteomaticsData[],
-  parameters: Parameter[],
-  locations: Local[],
+  data: MeteomaticsData,
   batchId: string
 ) {
   const savedMeasurements: Measurement[] = [];
-  console.log('Entrou no measurements utils');
-
-  for (const p of data) {
-    console.log('1 *')
-    const parameter = parameters.find((param) => param.code === p.parameter.split(':')[0]);
-    if (!parameter) continue;
-
-    console.log('Parameter: ', parameter)
-
-    for (const c of p.coordinates) {
-      console.log('2 **')
-      const local = locations.find((l) => l.lat === c.lat && l.lon === c.lon);
-      if (!local) continue;
-
-      console.log('local: ', local);
-      
-      for (const d of c.dates) {
-        console.log('measuremente uniade: ', d)
-        const measurement = await prisma.measurement.create({
-          data: {
-            localId: local.id,
-            parameterId: parameter.id,
-            timestamp: new Date(d.date),
-            value: d.value,
-            batchId,
-          },
-        });
-        savedMeasurements.push(measurement);
-      }
+  
+  for (const p of data.parameters) {
+    for (const l of data.locarions) {
+      const measurement = await prisma.measurement.create({
+        data: {
+          localId: l.id,
+          parameterId: p.id,
+          timestamp: new Date(data.date),
+          batchId: batchId,
+          value: data[p].coordinates[l].dates.value,
+        }
+      })
     }
   }
-
-  console.log('saindo do measurement utils, ', savedMeasurements);
-  return savedMeasurements;
 }
 
+
+/*
 export async function scheduleMeasurement(
   prisma: PrismaService,
   data: MeteomaticsData[],
@@ -89,3 +68,4 @@ export async function scheduleMeasurement(
 
   return savedMeasurements;
 }
+*/
