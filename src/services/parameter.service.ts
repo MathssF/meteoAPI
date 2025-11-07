@@ -10,55 +10,39 @@ export class ParameterService {
     return this.prisma.parameter.create({ data });
   }
 
-  findAll() {
+  async find(filters: { id?: string; name?: string; code?: string; unit?: string }) {
+    const { id, name, code, unit } = filters;
+
+    if (id) {
+      return this.prisma.parameter.findUnique({ where: { id } });
+    }
+
+    if (code) {
+      return this.prisma.parameter.findMany({
+        where: {
+          code: {
+            contains: code
+          },
+        },
+      });
+    }
+
+    if (name) {
+      return this.prisma.parameter.findMany({
+        where: {
+          name: {
+            contains: name
+          },
+        },
+      });
+    }
+
+    if (unit) {
+      return this.prisma.parameter.findMany({
+        where: { unit },
+      });
+    }
+
     return this.prisma.parameter.findMany();
-  }
-
-  async findById(id: string) {
-    return this.prisma.parameter.findUnique({ where: { id } });
-  }
-
-  async findByName(name: string) {
-    return this.prisma.parameter.findMany({
-      where: {
-        name: {
-          contains: name,
-        },
-      },
-    });
-  }
-
-  async findByCode(code: string) {
-    return this.prisma.parameter.findMany({
-      where: {
-        code: {
-          contains: code,
-        },
-      },
-    });
-  }
-
-  async findByUnit(unit: string) {
-    return this.prisma.parameter.findMany({
-      where: {
-        unit: {
-          equals: unit,
-        },
-      },
-    });
-  }
-
-  async findRandom() {
-    const count = await this.prisma.parameter.count();
-    if (count === 0) return null;
-
-    const randomIndex = Math.floor(Math.random() * count);
-
-    const randomParameter = await this.prisma.parameter.findMany({
-      take: 1,
-      skip: randomIndex,
-    });
-
-    return randomParameter[0] ?? null;
   }
 }
