@@ -36,7 +36,6 @@ describe('AlertController & AlertService', () => {
     jest.clearAllMocks();
   });
 
-  // ======= SERVICE TESTS =======
   describe('AlertService', () => {
     it('deve criar um alerta', async () => {
       const dto = {
@@ -66,7 +65,7 @@ describe('AlertController & AlertService', () => {
       expect(prismaMock.alert.findMany).toHaveBeenCalledWith({
         where: { localId: 'loc1', parameterId: 'par1' },
       });
-      expect(result.length).toBe(2);
+      expect(result!.length).toBe(2);
     });
 
     it('deve criar um triggeredAlert', async () => {
