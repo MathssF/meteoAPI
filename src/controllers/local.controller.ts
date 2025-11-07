@@ -4,7 +4,7 @@ import { LocalService } from '../services/local.service';
 import { CreateLocalDto } from '../tools/dto/create-local.dto';
 
 /**
- * Controlador responsável pelas localidades registradas no sistema.
+ * Controller responsável pelas localidades registradas no sistema.
  * Cada local possui um identificador (id), nome, latitude (lat) e longitude (lon).
  */
 @ApiTags('Localidades')
