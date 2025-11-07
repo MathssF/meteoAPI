@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Param, Patch, Body } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Body, Query, Param } from '@nestjs/common';
 import { ScheduleService } from '../services/schedule.service';
 import { CreateScheduleDto } from '../tools/dto/create-schedule.dto';
 
@@ -12,18 +12,12 @@ export class ScheduleController {
   }
 
   @Get()
-  findAll() {
-    return this.scheduleService.findAll();
-  }
-
-  @Get(':id')
-  findById(@Param('id') id: string) {
-    return this.scheduleService.findById(id);
-  }
-
-  @Get('local/:localId')
-  findByLocalId(@Param('localId') localId: string) {
-    return this.scheduleService.findByLocalId(localId);
+  find(
+    @Query('id') id?: string,
+    @Query('localId') localId?: string,
+    @Query('active') active?: string,
+  ) {
+    return this.scheduleService.find({ id, localId, active });
   }
 
   @Patch(':id/activate')

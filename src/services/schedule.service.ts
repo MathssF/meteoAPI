@@ -13,30 +13,28 @@ export class ScheduleService {
     private measurementService: MeasurementPostService,
   ) {}
 
-  // CRUD
-
   async create(data: CreateScheduleDto) {
     return this.prisma.schedule.create({ data });
   }
 
-  async findAll() {
-    return this.prisma.schedule.findMany({
-      include: { local: true, parameter: true },
-    });
-  }
+  async find(filters: { id?: string; localId?: string; active?: string }) {
+    const { id, localId, active } = filters;
 
-  async findById(id: string) {
-    const schedule = await this.prisma.schedule.findUnique({
-      where: { id },
-      include: { local: true, parameter: true },
-    });
-    if (!schedule) throw new NotFoundException(`Schedule ${id} não encontrado`);
-    return schedule;
-  }
+    if (id) {
+      const schedule = await this.prisma.schedule.findUnique({
+        where: { id },
+        include: { local: true, parameter: true },
+      });
+      if (!schedule) throw new NotFoundException(`Schedule ${id} não encontrado`);
+      return schedule;
+    }
 
-  async findByLocalId(localId: string) {
+    const where: any = {};
+    if (localId) where.localId = localId;
+    if (active !== undefined) where.active = active === 'true';
+
     return this.prisma.schedule.findMany({
-      where: { localId },
+      where,
       include: { local: true, parameter: true },
     });
   }
@@ -59,14 +57,12 @@ export class ScheduleService {
     return schedule;
   }
 
-  // CRON JOB (a cada 5 minutos)
-
   @Cron('*/5 * * * *')
   async handleSchedules() {
     const now = new Date();
-    const currentTime = now.toTimeString().slice(0, 5); // "HH:MM"
-    const currentDay = now.toLocaleString('en-US', { weekday: 'short' }).toLowerCase(); // "mon", "tue", etc.
-    const currentDate = now.getDate().toString(); // "10", "20", ...
+    const currentTime = now.toTimeString().slice(0, 5); // HH:MM
+    const currentDay = now.toLocaleString('en-US', { weekday: 'short' }).toLowerCase();
+    const currentDate = now.getDate().toString();
 
     const schedules = await this.prisma.schedule.findMany({
       where: { active: true, time: currentTime },
@@ -75,8 +71,7 @@ export class ScheduleService {
 
     for (const s of schedules) {
       if (this.shouldRun(s.when, currentDay, currentDate)) {
-        this.logger.log(`Schedule: ${s.id} para ${s.local.name} (${s.parameter.code})`);
-
+        this.logger.log(`Executando schedule ${s.id} para ${s.local.name} (${s.parameter.code})`);
         await this.measurementService.schedulePost(s.id, {
           parameters: [{ id: s.parameter.id }],
           locations: [{ id: s.local.id }],
