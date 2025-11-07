@@ -42,7 +42,7 @@ export class MeasurementRandomService {
         value,
         parameterId,
         localId,
-        source: 'meteomatics',
+        timestamp: new Date(),
       },
     });
 
