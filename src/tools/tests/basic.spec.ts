@@ -24,5 +24,19 @@ describe('',() => {
   let localController: LocalController;
   let parameterController: ParameterController;
 
-  beforeEach(async () => {})
+  beforeEach(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      controllers: [LocalController, ParameterController],
+      providers: [
+        LocalService,
+        ParameterService,
+        { provide: PrismaService, useValue: prismaMock },
+      ],
+    }).compile();
+
+    localService = module.get<LocalService>(LocalService);
+    parameterService = module.get<ParameterService>(ParameterService);
+    localController = module.get<LocalController>(LocalController);
+    parameterController = module.get<ParameterController>(ParameterController);
+  })
 })
