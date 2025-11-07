@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { MeasurementPostService } from './measurement.post.service';
-import { MeasurementFetchService } from './measurement.fetchs.service';
+import { MeasurementPostService } from '../../services/measurement.post.service';
+import { MeasurementFetchService } from '../../services/measurement.fetchs.service';
 
 describe('MeasurementService', () => {
   let postService: MeasurementPostService;

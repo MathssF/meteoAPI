@@ -1,7 +1,7 @@
 import { Controller, Post, Body, Get, Param } from '@nestjs/common';
-import { MeasurementPostService } from './measurement.post.service';
-import { MeasurementFetchService } from './measurement.fetchs.service';
-import { FetchMeasurementsDto } from './dto/fetch-measurements.dto';
+import { MeasurementPostService } from '../services/measurement.post.service';
+import { MeasurementFetchService } from '../services/measurement.fetchs.service';
+import { FetchMeasurementsDto } from '../tools/dto/fetch-measurements.dto';
 
 @Controller('measurements')
 export class MeasurementController {

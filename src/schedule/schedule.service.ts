@@ -1,7 +1,7 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
-import { PrismaService } from '../prisma/prisma.service';
-import { MeasurementPostService } from '../measurement/measurement.post.service';
+import { PrismaService } from '../../sr/services/prisma.service';
+import { MeasurementPostService } from '../../sr/services/measurement.post.service';
 import { CreateScheduleDto } from './dto/create-schedule.dto';
 
 @Injectable()

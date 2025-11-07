@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Param, Query } from '@nestjs/common';
-import { ParameterService } from './parameter.service';
-import { CreateParameterDto } from './dto/create-parameter.dto';
+import { ParameterService } from '../services/parameter.service';
+import { CreateParameterDto } from '../../src/parameter/dto/create-parameter.dto';
 
 @Controller('parameter')
 export class ParameterController {

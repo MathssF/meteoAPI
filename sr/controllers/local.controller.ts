@@ -1,6 +1,6 @@
 import { Controller, Post, Get, Body, Param, Query } from '@nestjs/common';
-import { LocalService } from './local.service';
-import { CreateLocalDto } from '../../sr/tools/dto/create-local.dto';
+import { LocalService } from '../services/local.service';
+import { CreateLocalDto } from '../tools/dto/create-local.dto';
 
 @Controller('local')
 export class LocalController {

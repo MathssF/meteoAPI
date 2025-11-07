@@ -1,5 +1,5 @@
 import { ParameterModule } from 'src/parameter/parameter.module';
-import { PrismaService } from '../../prisma/prisma.service';
+import { PrismaService } from '../../services/prisma.service';
 import { Measurement, Local, Parameter } from '../interfaces/measurements.interface';
 import { Console } from 'console';
 

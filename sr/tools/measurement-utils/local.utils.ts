@@ -1,4 +1,4 @@
-import { PrismaService } from '../../prisma/prisma.service';
+import { PrismaService } from '../../services/prisma.service';
 import { Local } from '../interfaces/measurements.interface';
 
 export async function findOrCreateLocations(prisma: PrismaService, inputLocs: any[]) {

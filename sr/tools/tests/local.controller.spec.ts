@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { LocalController } from './local.controller';
-import { LocalService } from './local.service';
+import { LocalController } from '../../controllers/local.controller';
+import { LocalService } from '../../services/local.service';
 
 describe('LocalController', () => {
   let controller: LocalController;
