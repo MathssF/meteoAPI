@@ -72,10 +72,13 @@ export class ScheduleService {
     for (const s of schedules) {
       if (this.shouldRun(s.when, currentDay, currentDate)) {
         this.logger.log(`Executando schedule ${s.id} para ${s.local.name} (${s.parameter.code})`);
-        await this.measurementService.schedulePost(s.id, {
-          parameters: [{ id: s.parameter.id }],
-          locations: [{ id: s.local.id }],
-        });
+        await this.measurementService.executeFetch(
+          {
+            parameters: [{ id: s.parameter.id }],
+            locations: [{ id: s.local.id }],
+          },
+        s.id,
+        );
       }
     }
   }

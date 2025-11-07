@@ -15,45 +15,7 @@ export async function processAndSaveMeasurements(
   data: MeteomaticsData[],
   parameters: Parameter[],
   locations: Local[],
-  batchId: string
-) {
-  const savedMeasurements: Measurement[] = [];
-  for (const p of data) {
-    const parameter = parameters.find((param) => param.code === p.parameter);
-    if(!parameter) {
-      continue;
-    }
-    for (const c of p.coordinates) {
-      const local = locations.find((l) => l.lat === c.lat && l.lon === c.lon);
-      if (!local) {
-        continue;
-      }
-      for (const d of c.dates) {
-        const measurement = await prisma.measurement.create({
-          data: {
-            localId: local.id,
-            parameterId: parameter.id,
-            timestamp: new Date(d.date),
-            value: d.value,
-            batchId,
-          }
-
-        })
-        savedMeasurements.push(measurement);
-      }
-    }
-  }
-  return savedMeasurements;
-}
-
-
-
-export async function scheduleMeasurement(
-  prisma: PrismaService,
-  data: MeteomaticsData[],
-  parameters: Parameter[],
-  locations: Local[],
-  scheduleId: string
+  refs: { batchId?: string | null; scheduleId?: string | null }
 ) {
   const savedMeasurements: Measurement[] = [];
 
@@ -72,7 +34,8 @@ export async function scheduleMeasurement(
             parameterId: parameter.id,
             timestamp: new Date(d.date),
             value: d.value,
-            scheduleId
+            batchId: refs.batchId ?? null,
+            scheduleId: refs.scheduleId ?? null,
           },
         });
         savedMeasurements.push(measurement);
