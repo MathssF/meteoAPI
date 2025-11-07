@@ -19,24 +19,54 @@ export async function processAndSaveMeasurements(
   batchId: string
 ) {
   const savedMeasurements: Measurement[] = [];
-  
-  for (const p of parameters) {
-    for (const l of locations) {
-      const measurement = await prisma.measurement.create({
-        data: {
-          localId: l.id,
-          parameterId: p.id,
-          timestamp: new Date(data.date),
-          batchId: batchId,
-          value: data[p].coordinates[l].dates.value,
-        }
-      })
+  let pCount = 0;
+  let lCount = 0;
+  let vCount = 0
+  for (const p of data) {
+    pCount++;
+    const parameter = parameters.find((param) => param.code === p.parameter.split(':')[0]);
+    if(!parameter) {
+      console.log('Não achou parametro em ', pCount);
+      continue;
     }
+
+    console.log("Coordenadas dentro de ", pCount, " São: ", p.coordinates);
+
+    for (const c of p.coordinates) {
+      lCount ++;
+      const local = locations.find((l) => l.lat === c.lat && l.lon === c.lon);
+      if (!local) {
+        console.log('Não achou local em ', lCount);
+        continue;
+      }
+
+      console.log('Local encontrado em ', pCount, ':', lCount, ' é o local: ', local);
+
+      for (const d of c.dates) {
+        vCount ++;
+        const measurement = await prisma.measurement.create({
+          data: {
+            localId: local.id,
+            parameterId: parameter.id,
+            timestamp: new Date(d.date),
+            value: d.value,
+            batchId,
+          }
+        })
+        console.log('Measurement de ', pCount, ':', lCount, ':', vCount, ' é: ', measurement);
+      }
+      vCount = 0;
+    }
+    lCount = 0;
   }
+  pCount = 0;
+  
+  return savedMeasurements;
+  
 }
 
 
-/*
+
 export async function scheduleMeasurement(
   prisma: PrismaService,
   data: MeteomaticsData[],
@@ -71,4 +101,3 @@ export async function scheduleMeasurement(
 
   return savedMeasurements;
 }
-*/
