@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { AlertService } from './alert.service';
-import { AlertController } from './alert.controller';
-import { TriggeredAlertService } from './triggered-alert.service';
+import { AlertService } from '../../services/alert.service';
+import { AlertController } from '../../controllers/alert.controller';
+import { TriggeredAlertService } from '../../services/triggered-alert.service';
 import { TriggeredAlertController } from './triggered-alert.controller';
 
 @Module({

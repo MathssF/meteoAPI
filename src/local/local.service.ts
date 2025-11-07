@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { CreateLocalDto } from './dto/create-local.dto';
+import { CreateLocalDto } from '../../sr/tools/dto/create-local.dto';
 
 @Injectable()
 export class LocalService {

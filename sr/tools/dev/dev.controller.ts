@@ -1,6 +1,6 @@
 import { Controller, Post, Get, Param, Patch, Body, Put } from '@nestjs/common';
 import { DevService } from './dev.service';
-import type { DevCheckDto } from './dto/check';
+import type { DevCheckDto } from '../dto/dev.dto';
 
 @Controller('dev')
 export class DevController {
