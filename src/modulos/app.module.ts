@@ -5,6 +5,7 @@ import { ScheduleModule } from './ponta/schedule.module';
 import { ScheduleModule as NestScheduleModule } from '@nestjs/schedule';
 import { ScheduleService } from '../services/schedule.service';
 import { BasicModule } from './basic.module';
+import { DevModule } from 'src/tools/dev/dev.module';
 
 @Module({
   imports: [
@@ -12,7 +13,8 @@ import { BasicModule } from './basic.module';
     MeasurementModule,
     ScheduleModule,
     NestScheduleModule.forRoot(),
-    PrismaModule
+    PrismaModule,
+    DevModule, // Temporário
   ],
   controllers: [],
   providers: [ScheduleService],
