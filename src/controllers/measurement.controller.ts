@@ -2,6 +2,7 @@ import { Controller, Post, Body, Get, Query } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiQuery } from '@nestjs/swagger';
 import { MeasurementPostService } from '../services/measurement.post.service';
 import { MeasurementFetchService } from '../services/measurement.fetchs.service';
+import { MeasurementRandomService } from 'src/services/measurement.random.service';
 import { FetchMeasurementsDto } from '../tools/dto/fetch-measurements.dto';
 
 /**
@@ -14,6 +15,7 @@ export class MeasurementController {
   constructor(
     private readonly postService: MeasurementPostService,
     private readonly fetchService: MeasurementFetchService,
+    private readonly randomService: MeasurementRandomService,
   ) {}
 
   /**
