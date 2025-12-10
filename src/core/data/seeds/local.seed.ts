@@ -22,7 +22,7 @@ export async function seedLocals() {
     }
   }
 
-  console.log('✅ Locais inseridos com sucesso!');
+  console.log('Locais inseridos com sucesso!');
 }
 
 const list = [

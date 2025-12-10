@@ -26,5 +26,5 @@ export async function seedParameters() {
     }
   }
 
-  console.log('✅ Parâmetros inseridos com sucesso!');
+  console.log('Parâmetros inseridos com sucesso!');
 }

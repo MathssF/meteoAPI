@@ -57,5 +57,5 @@ export async function seedAlerts() {
     await prisma.alert.create({ data: alert });
   }
 
-  console.log('✅ Alertas inseridos com sucesso!');
+  console.log('Alertas inseridos com sucesso!');
 }

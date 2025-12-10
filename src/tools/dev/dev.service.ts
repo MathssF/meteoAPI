@@ -9,5 +9,6 @@ export class DevService {
   // ---- SEEDS ----
   async seed() {
     await mainSeed(this.prisma);
+    console.log('Seeds processadas')
   }
 }
