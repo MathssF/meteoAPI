@@ -124,6 +124,12 @@ docker exec -it meteo-api-api-1 sh
 npx prisma generate
 ```
 
+OBS: Embora não seja nescessário neste código, quando não se tem migrations, é comum que se rode:
+
+```bash
+npx prisma migrate deploy
+```
+
 6. **Rodar a aplicação**
 
 ```bash
