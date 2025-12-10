@@ -26,7 +26,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      DATABASE_URL: mysql://root:root@db:3306/meteo_db
+      DATABASE_URL: mysql://root:root@localhost:3306/meteo_db
     depends_on:
       - db
 volumes:
