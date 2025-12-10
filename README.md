@@ -91,13 +91,7 @@ No arquivo, .env.example, apague o ".example" ou crie uma versão só com ".env"
 OBS: Para a parte do METEOMATICS, vai precisar criar seu user aqui: https://www.meteomatics.com/en/weather-api/
 Eles irão te passar login e senha por email.
 
-4. **Gere o Prisma**
-
-```bash
-npx prisma generate
-```
-
-5. **Docker**
+4. **Docker**
 
 Criando:
 ```bash
@@ -117,6 +111,12 @@ sudo systemctl stop docker
 Reiniciando:
 ```bash
 sudo systemctl restart docker
+```
+
+5. **Gere o Prisma**
+
+```bash
+npx prisma generate
 ```
 
 6. **Rodar a aplicação**
