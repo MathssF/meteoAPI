@@ -88,6 +88,8 @@ Obs: Certifique-se de estar usando Node.js >= 20 e npm >= 10, conforme definido 
 
 No arquivo, .env.example, apague o ".example" ou crie uma versão só com ".env", depois preencha os dados com os seus dados.
 
+Em alguns casos, pode ser bom mudar o valor de PORT para outro, tipo 3001 ou 3002, para não dar conflito.
+
 OBS: Para a parte do METEOMATICS, vai precisar criar seu user aqui: https://www.meteomatics.com/en/weather-api/
 Eles irão te passar login e senha por email.
 
@@ -129,6 +131,8 @@ npx prisma generate
 ```bash
 npm run start:dev
 ```
+
+OBS: A Porta 3000 pode já estar sendo usada por outro projeto, se for o caso, mude-a para outro número, conforme vimos no passo 3.
 
 7. **Seeds (Opcional)**
 

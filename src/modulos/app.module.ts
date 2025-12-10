@@ -6,6 +6,8 @@ import { ScheduleModule as NestScheduleModule } from '@nestjs/schedule';
 import { ScheduleService } from '../services/schedule.service';
 import { BasicModule } from './basic.module';
 
+import { DevModule } from 'src/tools/dev/dev.module';
+
 @Module({
   imports: [
     BasicModule,
@@ -13,6 +15,8 @@ import { BasicModule } from './basic.module';
     ScheduleModule,
     NestScheduleModule.forRoot(),
     PrismaModule,
+
+    DevModule,
   ],
   controllers: [],
   providers: [ScheduleService],
