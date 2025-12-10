@@ -40,22 +40,32 @@ export class DevService {
     const url = "https://api.meteomatics.com/";
     const start = Date.now();
     try {
-      await axios.get(url, {
-        auth: {
-          username: process.env.METEOMATICS_USER,
-          password: process.env.METEOMATICS_PASS,
+      const response = await fetch(url, {
+        headers: {
+          Authorization:
+            'Basic ' +
+            Buffer.from(
+              `${process.env.METEOMATICS_USER}:${process.env.METEOMATICS_PASS}`,
+            ).toString('base64'),
         },
-        timeout: 3500,
+        signal: AbortSignal.timeout(3500),
       });
+
+      if (!response.ok) {
+        return {
+          status: 'error',
+          message: `HTTP ${response.status} - ${response.statusText}`,
+        };
+      }
 
       return {
         status: 'ok',
         latency: `${Date.now() - start}ms`,
       };
-    } catch (err) {
+    } catch (err: any) {
       return {
         status: 'error',
-        message: err.response?.statusText || err.message,
+        message: err.message || 'Erro desconhecido ao acessar a Meteomatics',
       };
     }
   }
