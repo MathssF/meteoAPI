@@ -4,6 +4,7 @@ import { mainSeed } from '../../core/data/seeds/main.seed';
 
 @Injectable()
 export class DevService {
+  private startTime = Date.now();
   constructor(private prisma: PrismaService) {}
 
   // ---- START ----
@@ -24,4 +25,50 @@ export class DevService {
     return { message: 'Banco resetado com sucesso!' };
   }
 
+
+  // ---- HEALTH ----
+  async checkDatabase() {
+    try {
+      await this.prisma.$queryRaw`SELECT 1`;
+      return { status: 'ok', latency: 'low' };
+    } catch (err) {
+      return { status: 'error', message: err.message };
+    }
+  }
+
+  async checkMeteomatics() {
+    const url = "https://api.meteomatics.com/";
+    const start = Date.now();
+    try {
+      await axios.get(url, {
+        auth: {
+          username: process.env.METEOMATICS_USER,
+          password: process.env.METEOMATICS_PASS,
+        },
+        timeout: 3500,
+      });
+
+      return {
+        status: 'ok',
+        latency: `${Date.now() - start}ms`,
+      };
+    } catch (err) {
+      return {
+        status: 'error',
+        message: err.response?.statusText || err.message,
+      };
+    }
+  }
+  async getHealthStatus() {
+    const db = await this.checkDatabase();
+    const meteomatics = await this.checkMeteomatics();
+    const uptimeSeconds = Math.floor((Date.now() - this.startTime) / 1000);
+
+    return {
+      database: db,
+      meteomatics: meteomatics,
+      uptime: `${uptimeSeconds}s`,
+      timestamp: new Date().toISOString(),
+    };
+  }
 }

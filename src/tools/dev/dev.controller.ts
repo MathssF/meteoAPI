@@ -12,4 +12,9 @@ export class DevController {
     await this.devService.start();
     return { message: 'Banco Iniciado, ou Reiniciado' };
   }
+
+  @Get('health')
+  async getHealth() {
+    return this.devService.getHealthStatus();
+  }
 }
