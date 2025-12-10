@@ -159,7 +159,12 @@ OBS: A Porta 3000 pode já estar sendo usada por outro projeto, se for o caso, m
 
 8. **Seeds (Opcional)**
 
-Na parte mais abaixo do Swagger tem o "Dev". Lá tem a única Função de Gerar as Seeds Iniciais, para testar o código. Use Esta Rota APENAS UMA VEZ.
+Na parte mais abaixo do Swagger tem o "Dev". Onde Possui as seguintes funções:
+
+- Start: Que inicia as Seeds do Banco de Dados.
+- Health: Que analisa a conexão com o Banco e a conexão com o MeteoAPI.
+
+Esta parte pode ser removida do AppModule depois de usada, e não é para o projeto final, mas mantive ali por causa das Seeds.
 
 9. **Acessando**
 
