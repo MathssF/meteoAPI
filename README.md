@@ -115,18 +115,41 @@ Reiniciando (Se Preciso):
 sudo systemctl restart docker
 ```
 
+Agora abra 2 Terminais:
+
+4.1. **Terminal 1**
+
 Executando:
 ```bash
 docker exec -it meteoapi-api-1 sh
 ```
 
-5. **Gere o Prisma**
-
+Gerando a API:
 ```bash
+npx prisma migrate deploy
 npx prisma generate
 ```
 
-6. **Rodar a aplicação**
+4.2. **Terminal 2**
+
+Executando
+```bash
+docker exec -it m_mysql sh
+```
+
+Conectando
+```bash
+mysql -u root -proot
+```
+
+Vendo o Banco
+```bash
+USE meteo_db;
+SHOW TABLES;
+```
+
+
+5. **Rodar a aplicação**
 
 ```bash
 npm run start:dev
@@ -134,12 +157,12 @@ npm run start:dev
 
 OBS: A Porta 3000 pode já estar sendo usada por outro projeto, se for o caso, mude-a para outro número, conforme vimos no passo 3.
 
-7. **Seeds (Opcional)**
+6. **Seeds (Opcional)**
 
 Se quiser ir nas seeds, vai no AppModule, e import o DevModule", e coloque entre os módulos.
 Depois disto, vai abrir em baixo do seu Swagger uma rota "/dev/seeds", pode usar ela.
 Recomendo que depois remova o DevModule do AppModule.
 
-8. **Acessando**
+7. **Acessando**
 
 Depois de tudo isto, basta rodar na rota "/". O Swagger já esta configurado na rota principal.
