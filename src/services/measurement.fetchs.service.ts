@@ -18,7 +18,7 @@ export class MeasurementFetchService {
     if (id) {
       const measurement = await this.prisma.measurement.findUnique({
         where: { id },
-        include: baseInclude, // { local: true, parameter: true, batch: true, schedule: true }
+        include: baseInclude,
       });
       if (!measurement)
         throw new NotFoundException(`Measurement ${id} não encontrada`);
