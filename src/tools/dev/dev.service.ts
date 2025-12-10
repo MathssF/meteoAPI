@@ -6,8 +6,8 @@ import { mainSeed } from '../../core/data/seeds/main.seed';
 export class DevService {
   constructor(private prisma: PrismaService) {}
 
-  // ---- SEEDS ----
-  async seed() {
+  // ---- START ----
+  async start() {
     await mainSeed(this.prisma);
     console.log('Seeds processadas')
   }

@@ -6,10 +6,10 @@ import type { DevCheckDto } from '../dto/dev.dto';
 export class DevController {
   constructor(private readonly devService: DevService) {}
 
-  // ---- SEED ----
-  @Post('seed')
-  async seed() {
-    await this.devService.seed();
-    return { message: 'Seeds executadas com sucesso!' };
+  // ---- START ----
+  @Post('start')
+  async start() {
+    await this.devService.start();
+    return { message: 'Banco Iniciado, ou Reiniciado' };
   }
 }
