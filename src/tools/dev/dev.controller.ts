@@ -10,6 +10,6 @@ export class DevController {
   @Post('seed')
   async seed() {
     await this.devService.seed();
-    return { message: '🌱 Seeds executadas com sucesso!' };
+    return { message: 'Seeds executadas com sucesso!' };
   }
 }
