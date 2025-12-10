@@ -159,9 +159,7 @@ OBS: A Porta 3000 pode já estar sendo usada por outro projeto, se for o caso, m
 
 8. **Seeds (Opcional)**
 
-Se quiser ir nas seeds, vai no AppModule, e import o DevModule", e coloque entre os módulos.
-Depois disto, vai abrir em baixo do seu Swagger uma rota "/dev/seeds", pode usar ela.
-Recomendo que depois remova o DevModule do AppModule.
+Na parte mais abaixo do Swagger tem o "Dev". Lá tem a única Função de Gerar as Seeds Iniciais, para testar o código. Use Esta Rota APENAS UMA VEZ.
 
 9. **Acessando**
 

@@ -6,6 +6,7 @@ import { ScheduleModule as NestScheduleModule } from '@nestjs/schedule';
 import { ScheduleService } from '../services/schedule.service';
 import { BasicModule } from './basic.module';
 
+/* Use o Modulo abaixo apenas para recursos e Desenvolvimento. Depois pode apagar e remover dos imports.*/
 import { DevModule } from 'src/tools/dev/dev.module';
 
 @Module({
