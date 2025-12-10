@@ -1,6 +1,5 @@
 import { Controller, Post, Get, Param, Patch, Body, Put } from '@nestjs/common';
 import { DevService } from './dev.service';
-import type { DevCheckDto } from '../dto/dev.dto';
 import { ApiOperation } from '@nestjs/swagger';
 
 @Controller('dev')
@@ -19,6 +18,7 @@ export class DevController {
     return { message: 'Banco Iniciado, ou Reiniciado' };
   }
 
+  // ---- HEALTH ----
   @Get('health')@ApiOperation({
     summary: 'Conferir conexões',
     description:
