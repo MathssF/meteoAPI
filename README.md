@@ -117,7 +117,7 @@ sudo systemctl restart docker
 
 Executando:
 ```bash
-docker exec -it meteo-api-api-1 sh
+docker exec -it meteoapi-api-1 sh
 ```
 
 5. **Gere o Prisma**
