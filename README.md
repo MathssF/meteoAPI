@@ -97,18 +97,40 @@ Eles irão te passar login e senha por email.
 npx prisma generate
 ```
 
-5. **Rodar a aplicação**
+5. **Docker**
+
+Criando:
+```bash
+docker compose up -d --build
+```
+
+Usando:
+```bash
+sudo systemctl start docker
+```
+
+Parando:
+```bash
+sudo systemctl stop docker
+```
+
+Reiniciando:
+```bash
+sudo systemctl restart docker
+```
+
+6. **Rodar a aplicação**
 
 ```bash
 npm run start:dev
 ```
 
-6. **Seeds (Opcional)**
+7. **Seeds (Opcional)**
 
 Se quiser ir nas seeds, vai no AppModule, e import o DevModule", e coloque entre os módulos.
 Depois disto, vai abrir em baixo do seu Swagger uma rota "/dev/seeds", pode usar ela.
 Recomendo que depois remova o DevModule do AppModule.
 
-7. **Acessando**
+8. **Acessando**
 
 Depois de tudo isto, basta rodar na rota "/". O Swagger já esta configurado na rota principal.
