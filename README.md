@@ -103,14 +103,19 @@ Usando:
 sudo systemctl start docker
 ```
 
-Parando:
+Parando (Se Preciso):
 ```bash
 sudo systemctl stop docker
 ```
 
-Reiniciando:
+Reiniciando (Se Preciso):
 ```bash
 sudo systemctl restart docker
+```
+
+Executando:
+```bash
+docker exec -it meteo-api-api-1 sh
 ```
 
 5. **Gere o Prisma**
