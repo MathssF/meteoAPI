@@ -117,7 +117,7 @@ sudo systemctl restart docker
 
 Agora abra 2 Terminais:
 
-4.1. **Terminal 1**
+5. **Primeiro Terminal**
 
 Executando:
 ```bash
@@ -130,7 +130,7 @@ npx prisma migrate deploy
 npx prisma generate
 ```
 
-4.2. **Terminal 2**
+6. **Segundo Terminal**
 
 Executando
 ```bash
@@ -149,7 +149,7 @@ SHOW TABLES;
 ```
 
 
-5. **Rodar a aplicação**
+7. **Rodar a aplicação**
 
 ```bash
 npm run start:dev
@@ -157,12 +157,12 @@ npm run start:dev
 
 OBS: A Porta 3000 pode já estar sendo usada por outro projeto, se for o caso, mude-a para outro número, conforme vimos no passo 3.
 
-6. **Seeds (Opcional)**
+8. **Seeds (Opcional)**
 
 Se quiser ir nas seeds, vai no AppModule, e import o DevModule", e coloque entre os módulos.
 Depois disto, vai abrir em baixo do seu Swagger uma rota "/dev/seeds", pode usar ela.
 Recomendo que depois remova o DevModule do AppModule.
 
-7. **Acessando**
+9. **Acessando**
 
 Depois de tudo isto, basta rodar na rota "/". O Swagger já esta configurado na rota principal.
