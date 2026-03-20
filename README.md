@@ -85,16 +85,16 @@ docker compose up -d --build
 
 ### Rodando migrations
 
-´´´
+```
 docker exec -it meteoapi-api-1 sh
 npx prisma migrate deploy
-´´´
+```
 
 A aplicação estará disponível em:
 
-´´´
+```
 http://localhost:3000
-´´´
+```
 
 
 ## 🔄 Fluxo de funcionamento 
