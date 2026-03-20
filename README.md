@@ -116,3 +116,8 @@ A aplicação segue uma estrutura baseada em módulos do NestJS:
 - Services → regras de negócio
 - Repositories/ORM → acesso ao banco
 - Scheduler → execução de tarefas periódicas
+
+
+## Links
+
+Meteomatics: https://www.meteomatics.com/en/weather-api/
