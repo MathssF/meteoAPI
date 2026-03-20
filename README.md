@@ -1,171 +1,118 @@
-# Projeto Meteo-API
+# Meteo-API
 
-Este Projeto visa pegar as API do Meteomatics (https://www.meteomatics.com/en/weather-api/), e criar uma persistência própria, para poder ser posteriormente usada como Api.
+API para coleta, armazenamento e monitoramento de dados meteorológicos utilizando a Weather API da Meteomatics.
 
-Îndice:
+O projeto foi desenvolvido com foco em cenários de **monitoramento contínuo**, permitindo não apenas consultar dados climáticos, mas também:
 
-1- Estrutura
+- Persistir histórico de medições
+- Automatizar coletas periódicas
+- Definir alertas baseados em condições específicas
 
-2- Tecnologias e Escolhas
+---
 
-3- Instalando Localmente
+## 🚀 Tecnologias
+
+- **Node.js + NestJS** → estrutura modular e escalável
+- **TypeScript** → tipagem e maior segurança
+- **MySQL + Prisma ORM** → persistência e modelagem relacional
+- **Docker** → padronização de ambiente
+- **Swagger** → documentação da API
+- **Jest** → testes automatizados
 
 
-## 1- Estrutura
+## 📦 Modelo de Dados
 
-### Banco
+O sistema foi estruturado de forma relacional, separando entidades de domínio para permitir flexibilidade na coleta e análise dos dados.
 
-O Banco de dados envolve algumas tabelas principais:
+- **Location**: Representa um ponto geográfico (latitude/longitude) a ser monitorado.
 
-**Local**: Localidades, com id, nome, latitude e longitude.
+- **Parameter**: Define quais variáveis climáticas podem ser coletadas (ex: temperatura, umidade, precipitação).
 
-**Parameters**: Diferentes parametros de medidas, como temperatura, visibilidade, precipitação, aptos para serem usados e checados.
+- **Measurement**: Armazena os dados coletados ao longo do tempo, formando o histórico de medições.
 
-**Measurement**: A tabela que é o carro chefe! Ela é uma persistência que relembra todos os resultados anteriores.
+- **Schedule**: Responsável por definir a periodicidade das coletas (ex: diariamente, dias específicos da semana ou mês).
 
-**Schedule**: Tabela que faz mediçoes agendadas, em dias da semana especificos ou em dias do mês, especificos.
+- **Alert**: Regras configuráveis que avaliam medições e disparam eventos quando condições são atendidas.
 
-**Alertas**: Lembretes para quando uma localidade apresentar alguma medida de algum parametro maior ou menor que um certo valor. Para gerar assim alertas.
+## 🌐 API
 
-Além de outras tabelas secundárias.
+A API segue padrão REST e expõe endpoints para gerenciamento das principais entidades:
 
-### Api
+- **Locations** → criação e consulta de pontos geográficos  
+- **Parameters** → gerenciamento das variáveis monitoradas  
+- **Measurements** → coleta e consulta de dados climáticos  
+- **Schedules** → configuração de coletas automáticas  
+- **Alerts** → definição e consulta de regras de alerta  
 
-Semelhante as tabelas temos:
+## 🧪 Testes
 
-**Local**: Para adicionar registros, ou ver localidades registradas.
+Um exemplo de requisição para o endpoint de **Measurement** pode ser encontrado em:
 
-**Parameters**: Para adicionar novos parametros nas buscas, ou verificar os já existentes.
+```
+src/tools/dev/resources/measurement.test.json
+```
 
-**Measurement**: A API mais importante. Ela pode tanto pesquisar e criar novos registros no banco de dados. Quanto mostrar todos que já aconteceram.
-
-**Schedule**: Adicionar uma agenda ou ver as agendas.
-
-**Alertas**: Adicionar um alerta ou ver os alertas.
-
-#### Testes:
-
-Nas rota principal de Measurement, você pode testar, usando o conteúdo do arquivo:
-/workspaces/meteoAPI/src/tools/dev/resources/measurement.test.json
-
-Irá dar uma resposta semelhante a esta:
+A resposta esperada é semelhante a:
 
 ![Exemplo de Resposta](docs/response-measurement.png)
 
-Além disto, passo a passo para Testar os Alertas:
+### Testando Alertas
 
-1. Faça uma medição aleatória.
-2. Copie o localId, paramterId, value
-3. Crie um alerta, usando este parameterId, localId, e com um valor próximo do Value (mas não igual), se for menor, use a condição '>', se for maior, use a confição'<'
-4. Por fim, pegue novamente estes valores de localId, parameterId e usando a mesma data utilizada, jogue na primeira rota de medição.
-5. Irá dar um resultado que vai incluir uma resposta de "trigger alert"
+1. Crie uma medição
+2. Anote: `locationId`, `parameterId` e `value`
+3. Crie um alerta com base nesses valores:
+   - Use `>` para valores abaixo do esperado
+   - Use `<` para valores acima
+4. Execute novamente a medição com os mesmos parâmetros
 
-## 2- Tecnologias e Escolhas
+Se a condição for atendida, o sistema retornará um **trigger de alerta**.
 
-Neste projeto, optei por usar NestJS, Docker, MySQL, e TypeScript como as principais ferramentas. Outras ferramentas envolveram Jest, UUIDv7, entre outros.
+## ⚙️ Instalação
 
-Eu escolhi fazer mais de uma tabela, para criar relações entre elas, e interações.
+### Pré-requisitos
 
-## 3- Instalação
+- Docker
+- Docker Compose
 
-Para instalar e rodar a aplicação localmente, siga os passos abaixo:
+### Passos
 
-1. **Clone o repositório**
 ```bash
-git clone <URL_DO_REPOSITORIO>
+git clone <URL>
 cd meteo-api
-```
-
-2. **Instale as dependências**
-
-```bash
-npm install
-```
-
-Obs: Certifique-se de estar usando Node.js >= 20 e npm >= 10, conforme definido no package.json.
-
-3. **Configure as variáveis de ambiente**
-
-No arquivo, .env.example, apague o ".example" ou crie uma versão só com ".env", depois preencha os dados com os seus dados.
-
-Em alguns casos, pode ser bom mudar o valor de PORT para outro, tipo 3001 ou 3002, para não dar conflito.
-
-OBS: Para a parte do METEOMATICS, vai precisar criar seu user aqui: https://www.meteomatics.com/en/weather-api/
-Eles irão te passar login e senha por email.
-
-4. **Docker**
-
-Criando:
-```bash
+cp .env.example .env
 docker compose up -d --build
 ```
 
-Usando:
-```bash
-sudo systemctl start docker
-```
+### Rodando migrations
 
-Parando (Se Preciso):
-```bash
-sudo systemctl stop docker
-```
-
-Reiniciando (Se Preciso):
-```bash
-sudo systemctl restart docker
-```
-
-Agora abra 2 Terminais:
-
-5. **Primeiro Terminal**
-
-Executando:
-```bash
+´´´
 docker exec -it meteoapi-api-1 sh
-```
-
-Gerando a API:
-```bash
 npx prisma migrate deploy
-npx prisma generate
-```
+´´´
 
-6. **Segundo Terminal**
+A aplicação estará disponível em:
 
-Executando
-```bash
-docker exec -it m_mysql sh
-```
-
-Conectando
-```bash
-mysql -u root -proot
-```
-
-Vendo o Banco
-```bash
-USE meteo_db;
-SHOW TABLES;
-```
+´´´
+http://localhost:3000
+´´´
 
 
-7. **Rodar a aplicação**
+## 🔄 Fluxo de funcionamento 
 
-```bash
-npm run start:dev
-```
+1. Usuário define um local (latitude/longitude)
+2. Um agendamento é criado
+3. O sistema consulta a API da Meteomatics periodicamente
+4. Os dados são persistidos no banco
+5. Regras de alerta são avaliadas
+6. Caso condições sejam atendidas, um alerta é disparado
 
-OBS: A Porta 3000 pode já estar sendo usada por outro projeto, se for o caso, mude-a para outro número, conforme vimos no passo 3.
 
-8. **Seeds (Opcional)**
 
-Na parte mais abaixo do Swagger tem o "Dev". Onde Possui as seguintes funções:
+## 🧠 Arquitetura 
 
-- Start: Que inicia as Seeds do Banco de Dados.
-- Health: Que analisa a conexão com o Banco e a conexão com o MeteoAPI.
+A aplicação segue uma estrutura baseada em módulos do NestJS:
 
-Esta parte pode ser removida do AppModule depois de usada, e não é para o projeto final, mas mantive ali por causa das Seeds.
-
-9. **Acessando**
-
-Depois de tudo isto, basta rodar na rota "/". O Swagger já esta configurado na rota principal.
+- Controllers → entrada das requisições
+- Services → regras de negócio
+- Repositories/ORM → acesso ao banco
+- Scheduler → execução de tarefas periódicas
