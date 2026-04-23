@@ -1,36 +1,123 @@
-# Projeto Meteo-API
+# Meteo-API
 
-Este Projeto visa pegar as API do Meteomatics (https://www.meteomatics.com/en/weather-api/), e criar uma persistência própria, para poder ser posteriormente usada como Api.
+API para coleta, armazenamento e monitoramento de dados meteorológicos utilizando a Weather API da Meteomatics.
+
+O projeto foi desenvolvido com foco em cenários de **monitoramento contínuo**, permitindo não apenas consultar dados climáticos, mas também:
+
+- Persistir histórico de medições
+- Automatizar coletas periódicas
+- Definir alertas baseados em condições específicas
+
+---
+
+## 🚀 Tecnologias
+
+- **Node.js + NestJS** → estrutura modular e escalável
+- **TypeScript** → tipagem e maior segurança
+- **MySQL + Prisma ORM** → persistência e modelagem relacional
+- **Docker** → padronização de ambiente
+- **Swagger** → documentação da API
+- **Jest** → testes automatizados
 
 
-## Estrutura
+## 📦 Modelo de Dados
 
-### Banco
+O sistema foi estruturado de forma relacional, separando entidades de domínio para permitir flexibilidade na coleta e análise dos dados.
 
-O Banco de dados envolve algumas tabelas principais:
+- **Location**: Representa um ponto geográfico (latitude/longitude) a ser monitorado.
 
-**Local**: Localidades, com id, nome, latitude e longitude.
+- **Parameter**: Define quais variáveis climáticas podem ser coletadas (ex: temperatura, umidade, precipitação).
 
-**Parameters**: Diferentes parametros de medidas, como temperatura, visibilidade, precipitação, aptos para serem usados e checados.
+- **Measurement**: Armazena os dados coletados ao longo do tempo, formando o histórico de medições.
 
-**Measurement**: A tabela que é o carro chefe! Ela é uma persistência que relembra todos os resultados anteriores.
+- **Schedule**: Responsável por definir a periodicidade das coletas (ex: diariamente, dias específicos da semana ou mês).
 
-**Schedule**: Tabela que faz mediçoes agendadas, em dias da semana especificos ou em dias do mês, especificos.
+- **Alert**: Regras configuráveis que avaliam medições e disparam eventos quando condições são atendidas.
 
-**Alertas**: Lembretes para quando uma localidade apresentar alguma medida de algum parametro maior ou menor que um certo valor. Para gerar assim alertas.
+## 🌐 API
 
-Além de outras tabelas secundárias.
+A API segue padrão REST e expõe endpoints para gerenciamento das principais entidades:
 
-### Api
+- **Locations** → criação e consulta de pontos geográficos  
+- **Parameters** → gerenciamento das variáveis monitoradas  
+- **Measurements** → coleta e consulta de dados climáticos  
+- **Schedules** → configuração de coletas automáticas  
+- **Alerts** → definição e consulta de regras de alerta  
 
-Semelhante as tabelas temos:
+## 🧪 Testes
 
-**Local**: Para adicionar registros, ou ver localidades registradas.
+Um exemplo de requisição para o endpoint de **Measurement** pode ser encontrado em:
 
-**Parameters**: Para adicionar novos parametros nas buscas, ou verificar os já existentes.
+```
+src/tools/dev/resources/measurement.test.json
+```
 
-**Measurement**: A API mais importante. Ela pode tanto pesquisar e criar novos registros no banco de dados. Quanto mostrar todos que já aconteceram.
+A resposta esperada é semelhante a:
 
-**Schedule**: Adicionar uma agenda ou ver as agendas.
+![Exemplo de Resposta](docs/response-measurement.png)
 
-**Alertas**: Adicionar um alerta ou ver os alertas.
+### Testando Alertas
+
+1. Crie uma medição
+2. Anote: `locationId`, `parameterId` e `value`
+3. Crie um alerta com base nesses valores:
+   - Use `>` para valores abaixo do esperado
+   - Use `<` para valores acima
+4. Execute novamente a medição com os mesmos parâmetros
+
+Se a condição for atendida, o sistema retornará um **trigger de alerta**.
+
+## ⚙️ Instalação
+
+### Pré-requisitos
+
+- Docker
+- Docker Compose
+
+### Passos
+
+```bash
+git clone <URL>
+cd meteo-api
+cp .env.example .env
+docker compose up -d --build
+```
+
+### Rodando migrations
+
+```
+docker exec -it meteoapi-api-1 sh
+npx prisma migrate deploy
+```
+
+A aplicação estará disponível em:
+
+```
+http://localhost:3000
+```
+
+
+## 🔄 Fluxo de funcionamento 
+
+1. Usuário define um local (latitude/longitude)
+2. Um agendamento é criado
+3. O sistema consulta a API da Meteomatics periodicamente
+4. Os dados são persistidos no banco
+5. Regras de alerta são avaliadas
+6. Caso condições sejam atendidas, um alerta é disparado
+
+
+
+## 🧠 Arquitetura 
+
+A aplicação segue uma estrutura baseada em módulos do NestJS:
+
+- Controllers → entrada das requisições
+- Services → regras de negócio
+- Repositories/ORM → acesso ao banco
+- Scheduler → execução de tarefas periódicas
+
+
+## Links
+
+Meteomatics: https://www.meteomatics.com/en/weather-api/
