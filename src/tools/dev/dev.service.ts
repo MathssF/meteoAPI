@@ -9,17 +9,14 @@ export class DevService {
 
   // ---- START ----
   async start() {
-    await this.prisma.$executeRawUnsafe(`SET FOREIGN_KEY_CHECKS = 0;`);
+    await this.prisma.triggeredAlert.deleteMany();
+    await this.prisma.schedule.deleteMany();
+    await this.prisma.alert.deleteMany();
+    await this.prisma.measurement.deleteMany();
+    await this.prisma.forecastBatch.deleteMany();
+    await this.prisma.parameter.deleteMany();
+    await this.prisma.local.deleteMany();
 
-    const tables = await this.prisma.$queryRaw<
-      Array<{ TABLE_NAME: string }>
-    >`SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'meteo_db'`;
-
-    for (const t of tables) {
-      await this.prisma.$executeRawUnsafe(`TRUNCATE TABLE ${t.TABLE_NAME}`);
-    }
-
-    await this.prisma.$executeRawUnsafe(`SET FOREIGN_KEY_CHECKS = 1;`);
     await mainSeed(this.prisma);
 
     return { message: 'Banco resetado com sucesso!' };
