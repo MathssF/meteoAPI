@@ -2,6 +2,8 @@
 
 This project aims to fetch the Meteomatics API (https://www.meteomatics.com/en/weather-api/), and create its own persistence, so it can later be used as an API.
 
+> 🇧🇷 [Leia este README em português](./README_pt-br.md)
+
 ## Structure
 
 ### Database
