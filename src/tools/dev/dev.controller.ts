@@ -1,6 +1,6 @@
 import { Controller, Post, Get, Param, Patch, Body, Put } from '@nestjs/common';
 import { DevService } from './dev.service';
-import { ApiOperation } from '@nestjs/swagger';
+import type { DevCheckDto } from '../dto/dev.dto';
 
 @Controller('dev')
 export class DevController {
@@ -8,23 +8,69 @@ export class DevController {
 
   // ---- START ----
   @Post('start')
-  @ApiOperation({
-      summary: 'Iniciar ou Reiniciar o Banco de Dados',
-      description:
-        'Possui os dados iniciais que serão usados.',
-    })
   async start() {
     await this.devService.start();
     return { message: 'Banco Iniciado, ou Reiniciado' };
   }
 
+  // ---- SEED ----
+  @Post('seed')
+  async seed() {
+    await this.devService.seed();
+    return { message: '🌱 Seeds executadas com sucesso!' };
+  }
+
   // ---- HEALTH ----
-  @Get('health')@ApiOperation({
-    summary: 'Conferir conexões',
-    description:
-      'Verifica a conexão com o Banco, e com a API da Meteo, e informa a latência.',
-  })
+  @Get('health')
   async getHealth() {
     return this.devService.getHealthStatus();
+  }
+
+  // ---- SCHEDULES ----
+  @Post('schedules/activate-all')
+  async activateAll() {
+    return this.devService.activateAllSchedules();
+  }
+
+  @Post('schedules/deactivate-all')
+  async deactivateAll() {
+    return this.devService.deactivateAllSchedules();
+  }
+
+  // ---- FORECAST BATCH ----
+  @Get('batches')
+  async findAllBatches() {
+    return this.devService.findAllBatches();
+  }
+
+  @Get('batches/:id')
+  async findBatchById(@Param('id') id: string) {
+    return this.devService.findBatchById(id);
+  }
+
+  @Get('batches/date/:date')
+  async findBatchesByDate(@Param('date') date: string) {
+    return this.devService.findBatchesByDate(date);
+  }
+
+
+  @Put('check')
+  async checkDev(@Body() data: DevCheckDto) {
+    const { L, P, V } = data;
+    let locals: string[] = [];
+    let parameters: string[] = [];
+    for(const l of L) {
+      const point = await this.devService.check('l', l, V);
+      if (point) locals.push(l);
+      continue
+    };
+    for(const p of P) {
+      const meteo = await this.devService.check('p', p, V);
+      if(meteo) parameters.push(p);
+      continue
+    }
+    return {
+      locals, parameters
+    }
   }
 }
